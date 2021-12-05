@@ -16,6 +16,6 @@ Pod::Spec.new do |spec|
   spec.source_files   = "Sources", "Sources/**/*.swift"
   spec.exclude_files  = "Sources/Supporting Files/*"
   spec.swift_versions = ['5.1', '5.2', '5.3', '5.4', '5.5']
-  spec.framework      = "QuartzCore"
+  spec.frameworks     = "UIKit", "QuartzCore", "CoreGraphics"
   
 end

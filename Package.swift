@@ -29,7 +29,9 @@ let package = Package(
                 "Supporting Files/MiniFlawless.h"
             ],
             linkerSettings: [
-                .linkedFramework("QuartzCore", .when(platforms: [ .iOS, .macOS ]))
+                .linkedFramework("UIKit", .when(platforms: [ .iOS, .macOS ])),
+                .linkedFramework("QuartzCore", .when(platforms: [ .iOS, .macOS ])),
+                .linkedFramework("CoreGraphics", .when(platforms: [ .iOS, .macOS ]))
             ]
         ),
         .testTarget(

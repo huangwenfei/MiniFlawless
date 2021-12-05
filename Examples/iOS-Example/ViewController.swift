@@ -12,17 +12,28 @@ class ViewController: UIViewController {
     
     var testView: UIView = .init(frame: .init(x: 0, y: 60, width: 100, height: 100))
     
-    var mini: MiniFlawless<CGFloat>!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        
+    func setup() {
         view.backgroundColor = .darkGray
         
         testView.center.x = view.center.x
         testView.backgroundColor = .lightGray
         view.addSubview(testView)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        
+        setup()
+        miniTest()
+        
+    }
+    
+    #if true
+    
+    var mini: MiniFlawless<CGFloat>!
+    
+    func miniTest() {
         
         let item = MiniFlawlessItem<CGFloat>.init(
             name: "Test",
@@ -60,8 +71,8 @@ class ViewController: UIViewController {
             mini.reversedAnimation()
         }
         #endif
-        
     }
+    #endif
 
 
 }

@@ -74,9 +74,9 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     public var completion: Completion? = nil
     
     /// 一个运动周期结束后调用
-    /// 如： Auto Reverse = true, foreverRun = false, eachCompletion 会被调用两次，最后一次与 completion 同时被调用 ( repeatCount == 2 )
-    /// 如：repeatCount > 1, foreverRun = false, Auto Reverse = false, eachCompletion 会被调用 repeatCount 次，最后一次与 completion 同时被调用
-    /// 如：foreverRun = true, eachCompletion 会被调用 futureCount 次，最后一次与 completion 同时被调用
+    /// 如： Auto Reverse = true, foreverRun = false, eachCompletion 会被调用一次
+    /// 如：repeatCount > 1, foreverRun = false, Auto Reverse = false, eachCompletion 会被调用 repeatCount - 1 次
+    /// 如：foreverRun = true, eachCompletion 会被调用 futureCount - 1 次
     public var eachCompletion: Completion? = nil
     
     internal func completeIt() {

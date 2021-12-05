@@ -71,7 +71,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         displayItem.write()
         
         /// isEachDone & eachCompletion
-        if displayItem.isEachDone {
+        if !displayItem.isDone && displayItem.isEachDone {
             displayItem.updateRunCount()
             print(#function, "RunCount:", displayItem.currentRunCount)
             DispatchQueue.main.async {
@@ -95,6 +95,8 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         
         /// isDone & Completion & isRemoveOnCompletion
         if displayItem.isDone {
+            displayItem.updateRunCount()
+            print(#function, "RunCount:", displayItem.currentRunCount)
             DispatchQueue.main.async {
                 self.displayItem.completeIt()
                 self.stopAnimation()

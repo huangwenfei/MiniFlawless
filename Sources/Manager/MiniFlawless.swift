@@ -37,6 +37,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
             #if DEBUG
             print(#function, "Display Done !!!")
             #endif
+            stopAnimation()
             return
         }
         

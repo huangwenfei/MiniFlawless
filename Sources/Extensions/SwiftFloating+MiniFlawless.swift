@@ -61,7 +61,7 @@ extension MiniFlawlessSteppable where Self: BinaryFloatingPoint {
 }
 
 extension Float: MiniFlawlessSteppable   { }
-@available(iOS 14.0, *)
+@available(iOS 14.0, macOS 11.0, *)
 extension Float16: MiniFlawlessSteppable { }
 #if os(macOS)
 @available(macOS 10.10, *)

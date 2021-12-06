@@ -144,70 +144,124 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
 
 extension MiniFlawless {
     
-    public func reversedAnimation(delay: TimeInterval = 0) {
+    public func reversedAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
         guard displayLink != nil else { return }
         guard displayItem != nil else { return }
         
-        displayItem.cleanAndReversed()
-        
-        globalThread(delay: delay) {
-            self.startAnimation()
+        self.startAnimation(delay: delay) {
+            self.displayItem.cleanAndReversed()
+            completion?()
         }
         
     }
     
-    public func startAnimation() {
+    public func startAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
         guard let link = displayLink else { return }
         guard displayItem != nil else { return }
         
-        displayItem.startWrite()
+        func working() {
+            
+            displayItem.startWrite()
+            
+    //        displayItem.$state.write { $0 = .willStart }
+            displayLink?.isPaused = false
+    //        displayItem.$state.write { $0 = .start }
+            
+            uiThread {
+                self.displayActions.start?(link)
+                completion?()
+            }
+            
+        }
         
-//        displayItem.$state.write { $0 = .willStart }
-        displayLink?.isPaused = false
-//        displayItem.$state.write { $0 = .start }
-        
-        uiThread { self.displayActions.start?(link) }
+        if delay > 0 {
+            globalThread(delay: delay) { working() }
+        } else {
+            working()
+        }
         
     }
     
-    public func pauseAnimation() {
+    public func pauseAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
         guard let link = displayLink else { return }
         guard displayItem != nil else { return }
         
-//        displayItem.$state.write { $0 = .willPause }
-        displayLink?.isPaused = true
-//        displayItem.$state.write { $0 = .pause }
-        uiThread { self.displayActions.pause?(link) }
+        func working() {
+            
+//            displayItem.$state.write { $0 = .willPause }
+            displayLink?.isPaused = true
+//            displayItem.$state.write { $0 = .pause }
+            uiThread {
+                self.displayActions.pause?(link)
+                completion?()
+            }
+            
+        }
+        
+        if delay > 0 {
+            globalThread(delay: delay) { working() }
+        } else {
+            working()
+        }
     }
     
-    public func resumeAnimation() {
+    public func resumeAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
         guard let link = displayLink else { return }
         guard displayItem != nil else { return }
         
-//        displayItem.$state.write { $0 = .willResume }
-        displayLink?.isPaused = false
-//        displayItem.$state.write { $0 = .resume }
-        uiThread { self.displayActions.resume?(link) }
+        func working() {
+    //        displayItem.$state.write { $0 = .willResume }
+            displayLink?.isPaused = false
+    //        displayItem.$state.write { $0 = .resume }
+            uiThread {
+                self.displayActions.resume?(link)
+                completion?()
+            }
+            
+        }
+        
+        if delay > 0 {
+            globalThread(delay: delay) { working() }
+        } else {
+            working()
+        }
     }
     
-    public func stopAnimation() {
+    public func stopAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
         guard let link = displayLink else { return }
         guard displayItem != nil else { return }
         
-//        displayItem.$state.write { $0 = .willStop }
-        displayLink?.isPaused = true
-//        displayItem.$state.write { $0 = .stop }
-        uiThread { self.displayActions.stop?(link) }
+        func working() {
+            
+    //        displayItem.$state.write { $0 = .willStop }
+            displayLink?.isPaused = true
+    //        displayItem.$state.write { $0 = .stop }
+            uiThread {
+                self.displayActions.stop?(link)
+                completion?()
+            }
+            
+        }
+        
+        if delay > 0 {
+            globalThread(delay: delay) { working() }
+        } else {
+            working()
+        }
     }
     
-    public func cleanAnimation() {
-        stopAnimation()
-        displayItem = nil
+    public func cleanAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+        stopAnimation(delay: delay) {
+            self.displayItem = nil
+            completion?()
+        }
     }
     
-    public func destroyAnimation() {
-        cleanAnimation()
-        displayActions.clean()
+    public func destroyAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+        cleanAnimation(delay: delay) {
+            self.displayActions.clean()
+            completion?()
+        }
     }
     
 }

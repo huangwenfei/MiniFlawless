@@ -40,7 +40,9 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
             return
         }
         
+        #if false && DEBUG
         print(#function, displayLink.duration, displayLink.timestamp, displayLink.targetTimestamp)
+        #endif
         
         CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -64,17 +66,19 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         displayItem.updateCurrent()
         
         #if DEBUG
-        print(#function, "CurrentValue:", displayItem.current, "CurrentTime:", currentTime)
+        print(#function, "CurrentValue:", displayItem.current)
         #endif
         
         /// write back
-        displayItem.write()
+        if !displayItem.isDone { displayItem.write() }
         
         /// isEachDone & eachCompletion
         if !displayItem.isDone && displayItem.isEachDone {
             displayItem.updateRunCount()
-            print(#function, "RunCount:", displayItem.currentRunCount)
-            DispatchQueue.main.async {
+            #if DEBUG
+            print(#function, "RunCount:", displayItem.passRunCount)
+            #endif
+            uiThread {
                 
                 self.displayItem.eachCompletIt()
                 
@@ -96,8 +100,10 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         /// isDone & Completion & isRemoveOnCompletion
         if displayItem.isDone {
             displayItem.updateRunCount()
-            print(#function, "RunCount:", displayItem.currentRunCount)
-            DispatchQueue.main.async {
+            #if DEBUG
+            print(#function, "RunCount:", displayItem.passRunCount)
+            #endif
+            uiThread {
                 self.displayItem.completeIt()
                 self.stopAnimation()
                 if self.displayItem.isRemoveOnCompletion {
@@ -143,8 +149,8 @@ extension MiniFlawless {
         guard displayItem != nil else { return }
         
         displayItem.cleanAndReversed()
-        DispatchQueue.global().asyncAfter(deadline: .now() + delay) { [weak self] in
-            guard let self = self else { return }
+        
+        globalThread(delay: delay) {
             self.startAnimation()
         }
         
@@ -159,7 +165,9 @@ extension MiniFlawless {
 //        displayItem.$state.write { $0 = .willStart }
         displayLink?.isPaused = false
 //        displayItem.$state.write { $0 = .start }
-        displayActions.start?(link)
+        
+        uiThread { self.displayActions.start?(link) }
+        
     }
     
     public func pauseAnimation() {
@@ -169,7 +177,7 @@ extension MiniFlawless {
 //        displayItem.$state.write { $0 = .willPause }
         displayLink?.isPaused = true
 //        displayItem.$state.write { $0 = .pause }
-        displayActions.pause?(link)
+        uiThread { self.displayActions.pause?(link) }
     }
     
     public func resumeAnimation() {
@@ -179,7 +187,7 @@ extension MiniFlawless {
 //        displayItem.$state.write { $0 = .willResume }
         displayLink?.isPaused = false
 //        displayItem.$state.write { $0 = .resume }
-        displayActions.resume?(link)
+        uiThread { self.displayActions.resume?(link) }
     }
     
     public func stopAnimation() {
@@ -189,7 +197,7 @@ extension MiniFlawless {
 //        displayItem.$state.write { $0 = .willStop }
         displayLink?.isPaused = true
 //        displayItem.$state.write { $0 = .stop }
-        displayActions.stop?(link)
+        uiThread { self.displayActions.stop?(link) }
     }
     
     public func cleanAnimation() {

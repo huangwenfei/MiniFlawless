@@ -67,7 +67,7 @@ public class MiniFlawlessSpringStepper<Element: MiniFlawlessSteppable>: MiniFlaw
         let b: TimeInterval  = .init(configuration.damping)
         let m: TimeInterval  = .init(configuration.mass)
         let k: TimeInterval  = .init(configuration.stiffness)
-        let v0: TimeInterval = .init(configuration.velocity)
+        let v0: TimeInterval = .init(configuration.initialVelocity)
 
         precondition(m > 0)
         precondition(k > 0)
@@ -114,19 +114,23 @@ public class MiniFlawlessSpringStepper<Element: MiniFlawlessSteppable>: MiniFlaw
 extension MiniFlawlessSpringStepper {
     public struct Configuration {
         
-        public var damping: CGFloat = 1 {
+        /// Defines how the spring’s motion should be damped due to the forces of friction.
+        public var damping: CGFloat = 10 {
             didSet { update(self) }
         }
         
-        public var mass: CGFloat = 0 {
+        /// The mass of the object attached to the end of the spring.
+        public var mass: CGFloat = 1 {
             didSet { update(self) }
         }
         
-        public var stiffness: CGFloat = 0 {
+        /// The spring stiffness coefficient.
+        public var stiffness: CGFloat = 100 {
             didSet { update(self) }
         }
         
-        public var velocity: CGFloat = 0 {
+        /// The initial velocity of the object attached to the spring.
+        public var initialVelocity: CGFloat = 0 {
             didSet { update(self) }
         }
         
@@ -141,12 +145,12 @@ extension MiniFlawlessSpringStepper {
         internal var update: (Self) -> Void = { _ in  }
         internal var durationUpdate: (_ epsilon: CGFloat) -> Void = { _ in }
         
-        public init(damping: CGFloat = 1, mass: CGFloat = 0, stiffness: CGFloat = 0, velocity: CGFloat = 0, epsilon: CGFloat = 0.01, allowsOverdamping: Bool)
+        public init(damping: CGFloat = 10, mass: CGFloat = 1, stiffness: CGFloat = 100, initialVelocity: CGFloat = 0, epsilon: CGFloat = 0.01, allowsOverdamping: Bool = false)
         {
             self.damping = damping
             self.mass = mass
             self.stiffness = stiffness
-            self.velocity = velocity
+            self.initialVelocity = initialVelocity
             self.epsilon = epsilon
             self.allowsOverdamping = allowsOverdamping
         }

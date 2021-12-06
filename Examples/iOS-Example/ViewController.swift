@@ -24,12 +24,19 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        setup()
-        miniTest()
+        print(
+            MiniFlawlessItemListLinkContainer<Int>
+                .virtualHead()
+                .element(8)
+                .stepper(.tween(.init(function: .linear)))
+                .element(13)
+                .commit()
+                .items
+        )
         
     }
     
-    #if true
+    #if false
     
     var mini: MiniFlawless<CGFloat>!
     

@@ -10,12 +10,12 @@ import UIKit
 public final class MiniFlawlessManager {
     
     public init() {
-        let color = UIColor.red
-        let color1 = UIColor.gray
-        let disC = color --- color1
-        
-        let i = Int()
-        i --* color
+//        let color = UIColor.red
+//        let color1 = UIColor.gray
+//        let disC = color --- color1
+//        
+//        let i = Int()
+//        i --* color
     }
     
 }

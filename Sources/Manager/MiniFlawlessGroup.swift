@@ -22,40 +22,41 @@ public final class MiniFlawlessGroup<Element: MiniFlawlessSteppable> {
     private var displayCurrentItems: [MiniFlawlessItem<Element>] = []
     
     @objc private func objc_display(displayLink: CADisplayLink) {
-        guard displayCurrentItems.count != 0 else { return }
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
+//        guard displayCurrentItems.count != 0 else { return }
+//        CATransaction.begin()
+//        CATransaction.setDisableActions(true)
         
-        // TODO: Time Create
-        #warning("Time Create")
-        let time = CACurrentMediaTime()
-        
-        for idx in 0 ..< displayCurrentItems.count {
-            /// step function [effect]
-            displayCurrentItems[idx].$current.write {
-                $0 --+= displayCurrentItems[idx].stepper.step(t: time)
-            }
-            /// write back
-            displayCurrentItems[idx].write()
-            /// isDone & Completion & isRemoveOnCompletion
-            let item = displayCurrentItems[idx]
-//            print(#function, CACurrentMediaTime(), item.current)
-            if item.isDone {
-//                print(#function, "\(item.name) isDone")
-                DispatchQueue.main.async {
-                    item.completion?(item)
-                }
-                if item.isRemoveOnCompletion {
-                    displayItems.remove(at: idx)
-                }
-            }
-        }
-        /// delete `isDone == true`
-        displayCurrentItems = displayCurrentItems.filter {
-            $0.isDone == false
-        }
-        if displayCurrentItems.count == 0 { stopAnimation() }
-        CATransaction.commit()
+//        // TODO: Time Create
+//        #warning("Time Create")
+        fatalError("Time Create")
+//        let time = CACurrentMediaTime()
+//        
+//        for idx in 0 ..< displayCurrentItems.count {
+//            /// step function [effect]
+//            displayCurrentItems[idx].$current.write {
+//                $0 --+= displayCurrentItems[idx].stepper.step(t: time)
+//            }
+//            /// write back
+//            displayCurrentItems[idx].write()
+//            /// isDone & Completion & isRemoveOnCompletion
+//            let item = displayCurrentItems[idx]
+////            print(#function, CACurrentMediaTime(), item.current)
+//            if item.isDone {
+////                print(#function, "\(item.name) isDone")
+//                DispatchQueue.main.async {
+//                    item.completion?(item)
+//                }
+//                if item.isRemoveOnCompletion {
+//                    displayItems.remove(at: idx)
+//                }
+//            }
+//        }
+//        /// delete `isDone == true`
+//        displayCurrentItems = displayCurrentItems.filter {
+//            $0.isDone == false
+//        }
+//        if displayCurrentItems.count == 0 { stopAnimation() }
+//        CATransaction.commit()
     }
     
     public static var framesPerSecond: Int { 60 }

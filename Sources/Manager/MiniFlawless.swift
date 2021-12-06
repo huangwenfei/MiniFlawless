@@ -154,6 +154,8 @@ extension MiniFlawless {
         guard let link = displayLink else { return }
         guard displayItem != nil else { return }
         
+        displayItem.startWrite()
+        
 //        displayItem.$state.write { $0 = .willStart }
         displayLink?.isPaused = false
 //        displayItem.$state.write { $0 = .start }

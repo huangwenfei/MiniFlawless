@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "MiniFlawless",
-    platforms: [ .iOS(.v10), .macOS(.v10_15) ],
+    platforms: [ .iOS(.v10) ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -34,9 +34,9 @@ let package = Package(
                 "Sources/Manager/MiniFlawlessGroup.swift"
             ],
             linkerSettings: [
-                .linkedFramework("UIKit", .when(platforms: [ .iOS, .macOS ])),
-                .linkedFramework("QuartzCore", .when(platforms: [ .iOS, .macOS ])),
-                .linkedFramework("CoreGraphics", .when(platforms: [ .iOS, .macOS ]))
+                .linkedFramework("UIKit", .when(platforms: [ .iOS  ])),
+                .linkedFramework("QuartzCore", .when(platforms: [ .iOS  ])),
+                .linkedFramework("CoreGraphics", .when(platforms: [ .iOS ]))
             ]
         ),
         .testTarget(

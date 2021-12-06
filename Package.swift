@@ -31,7 +31,8 @@ let package = Package(
                 "Sources/Item List/MiniFlawlessItemList+ItemLink.swift",
                 "Sources/Item List/MiniFlawlessItemList+FromTo.swift",
                 "Sources/Manager/MiniFlawlessManager.swift",
-                "Sources/Manager/MiniFlawlessGroup.swift"
+                "Sources/Manager/MiniFlawlessGroup.swift",
+                "Sources/Extensions/SwiftBool+MiniFlawless.swift"
             ],
             linkerSettings: [
                 .linkedFramework("UIKit", .when(platforms: [ .iOS  ])),

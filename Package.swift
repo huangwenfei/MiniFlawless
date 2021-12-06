@@ -26,7 +26,12 @@ let package = Package(
             path: "Sources",
             exclude: [
                 "Supporting Files/Info.plist",
-                "Supporting Files/MiniFlawless.h"
+                "Supporting Files/MiniFlawless.h",
+                "Sources/Item List/MiniFlawlessItemList.swift",
+                "Sources/Item List/MiniFlawlessItemList+ItemLink.swift",
+                "Sources/Item List/MiniFlawlessItemList+FromTo.swift",
+                "Sources/Manager/MiniFlawlessManager.swift",
+                "Sources/Manager/MiniFlawlessGroup.swift"
             ],
             linkerSettings: [
                 .linkedFramework("UIKit", .when(platforms: [ .iOS, .macOS ])),

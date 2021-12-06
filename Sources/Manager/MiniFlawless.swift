@@ -161,6 +161,7 @@ extension MiniFlawless {
         
         func working() {
             
+            displayItem.reseted()
             displayItem.startWrite()
             
     //        displayItem.$state.write { $0 = .willStart }
@@ -236,6 +237,9 @@ extension MiniFlawless {
     //        displayItem.$state.write { $0 = .willStop }
             displayLink?.isPaused = true
     //        displayItem.$state.write { $0 = .stop }
+            
+            displayItem.reseted()
+            
             uiThread {
                 self.displayActions.stop?(link)
                 completion?()

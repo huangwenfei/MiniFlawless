@@ -102,9 +102,9 @@ extension MiniFlawlessGroup {
 //        guard let link = displayLink else { return }
         
         displayCurrentItems = displayItems
-        updateState(with: .willStart)
+//        updateState(with: .willStart)
         displayLink?.isPaused = false
-        updateState(with: .start)
+//        updateState(with: .start)
 //        displayActions.start?(link)
     }
     

@@ -10,6 +10,8 @@ import QuartzCore.CADisplayLink
 
 public struct MiniFlawlessSignals<Element: MiniFlawlessSteppable> {
     public typealias Action = (_ item: MiniFlawlessItem<Element>) -> Void
+    public var reset: Action? = nil
+    public var reverse: Action? = nil
     public var start: Action? = nil
     public var pause: Action? = nil
     public var resume: Action? = nil
@@ -24,6 +26,8 @@ public struct MiniFlawlessSignals<Element: MiniFlawlessSteppable> {
     public init() { }
     
     public mutating func clean() {
+        reset = nil
+        reverse = nil
         start = nil
         pause = nil
         resume = nil

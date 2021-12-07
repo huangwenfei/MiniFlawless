@@ -8,15 +8,47 @@
 import Foundation
 
 public enum MiniFlawlessItemState {
-    case willStart
-    case start
-    case willPause
     case pause
-    case willResume
-    case resume
     case working
-    case willStop
     case stop
     case finish
-    case cancle
+    
+    public var canReset: Bool {
+        switch self {
+        case .working:
+            return false
+        case .pause, .stop, .finish:
+            return true
+        }
+    }
+    
+    public var canReverse: Bool {
+        switch self {
+        case .working:
+            return false
+        case .pause, .stop, .finish:
+            return true
+        }
+    }
+    
+    public var canStart: Bool {
+        self != .working
+    }
+    
+    public var canPause: Bool {
+        self == .working
+    }
+    
+    public var canResume: Bool {
+        self == .pause
+    }
+    
+    public var canStop: Bool {
+        switch self {
+        case .pause, .working:
+            return true
+        case .stop, .finish:
+            return false
+        }
+    }
 }

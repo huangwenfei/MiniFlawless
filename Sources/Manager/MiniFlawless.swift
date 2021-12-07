@@ -141,22 +141,95 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
 
 extension MiniFlawless {
     
-    public func reversedAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+    public func resetAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+        
+        guard displayLink != nil else { return }
+        guard let item = displayItem else { return }
+        
+        guard item.state.canReset else { return }
+        
+        func working() {
+            
+            displayItem.reseted()
+            
+            uiThread {
+                self.displayActions?.reset?(item)
+            }
+        }
+        
+        if delay > 0 {
+            globalThread(delay: delay) { working() }
+        } else {
+            working()
+        }
+        
+    }
+    
+    public func forceResetAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+        
         guard displayLink != nil else { return }
         guard let item = displayItem else { return }
         
         func working() {
-            self.displayItem.cleanAndReversed()
-
-            displayItem.startWrite()
             
-    //        displayItem.$state.write { $0 = .willStart }
-            displayLink?.isPaused = false
-    //        displayItem.$state.write { $0 = .start }
+            displayLink?.isPaused = true
+            
+            displayItem.reseted()
             
             uiThread {
-                self.displayActions?.start?(item)
-                completion?()
+                self.displayActions?.reset?(item)
+            }
+        }
+        
+        if delay > 0 {
+            globalThread(delay: delay) { working() }
+        } else {
+            working()
+        }
+        
+    }
+    
+    public func reversedAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+        
+        guard displayLink != nil else { return }
+        guard let item = displayItem else { return }
+        
+        guard item.state.canReverse else { return }
+        
+        func working() {
+            
+            displayItem.cleanAndReversed()
+            displayItem.startWrite()
+            
+            uiThread {
+                self.displayActions?.reverse?(item)
+                self.startAnimation(completion:  completion)
+            }
+        }
+        
+        if delay > 0 {
+            globalThread(delay: delay) { working() }
+        } else {
+            working()
+        }
+        
+    }
+    
+    public func forceReversedAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+        
+        guard displayLink != nil else { return }
+        guard let item = displayItem else { return }
+        
+        func working() {
+            
+            displayLink?.isPaused = true
+            
+            displayItem.cleanAndReversed()
+            displayItem.startWrite()
+            
+            uiThread {
+                self.displayActions?.reverse?(item)
+                self.startAnimation(completion:  completion)
             }
         }
         
@@ -169,20 +242,21 @@ extension MiniFlawless {
     }
     
     public func startAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+
         guard displayLink != nil else { return }
         guard let item = displayItem else { return }
+        
+        guard item.state.canStart else { return }
         
         func working() {
             
             displayItem.reseted()
             displayItem.startWrite()
             
-    //        displayItem.$state.write { $0 = .willStart }
-            displayLink?.isPaused = false
-    //        displayItem.$state.write { $0 = .start }
-            
             uiThread {
+                self.displayLink?.isPaused = false
                 self.displayActions?.start?(item)
+                self.displayItem.$state.write { $0 = .working }
                 completion?()
             }
             
@@ -197,8 +271,11 @@ extension MiniFlawless {
     }
     
     public func pauseAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+        
         guard displayLink != nil else { return }
         guard let item = displayItem else { return }
+        
+        guard item.state.canPause else { return }
         
         func working() {
             
@@ -220,8 +297,11 @@ extension MiniFlawless {
     }
     
     public func resumeAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+        
         guard displayLink != nil else { return }
         guard let item = displayItem else { return }
+        
+        guard item.state.canResume else { return }
         
         func working() {
     //        displayItem.$state.write { $0 = .willResume }
@@ -242,8 +322,11 @@ extension MiniFlawless {
     }
     
     public func stopAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
+        
         guard displayLink != nil else { return }
         guard let item = displayItem else { return }
+        
+        guard item.state.canStop else { return }
         
         func working() {
             

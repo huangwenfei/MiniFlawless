@@ -15,8 +15,8 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     
     public var name: String = ""
     
-//    @Protected
-//    public var state: MiniFlawlessItemState = .stop
+    @Protected
+    public var state: MiniFlawlessItemState = .stop
     
     /// Each Duration Or Total Duration
     public var duration: TimeInterval = 0 {

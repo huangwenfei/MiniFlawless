@@ -251,9 +251,7 @@ extension MiniFlawless {
             displayLink?.isPaused = true
     //        displayItem.$state.write { $0 = .stop }
             
-            displayItem.isFinished = displayItem.isDone
-            displayItem.completeIt()
-            
+            displayItem.stopCompletion()
             displayItem.reseted()
             
             uiThread {

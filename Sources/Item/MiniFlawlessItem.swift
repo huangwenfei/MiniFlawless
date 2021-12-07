@@ -78,6 +78,8 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     /// Only vaild in Item troup .
     public var isRemoveOnCompletion: Bool = true
     
+    public var isFinished: Bool = false
+    
     public typealias Completion = (Self) -> Void
     public var completion: Completion? = nil
     
@@ -88,10 +90,16 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     public var eachCompletion: Completion? = nil
     
     internal func completeIt() {
+        guard doneFillMode != .none else {
+            completion?(self)
+            return
+        }
+        
         let isReverse = isAutoReverse && (passRunCount % 2 == 0)
         let from = isReverse ? self.to : self.from
         let to = isReverse ? self.from : self.to
         switch doneFillMode {
+        case .none: break
         case .from: writeBack?(from, 1, 1)
         case .to:   writeBack?(to, 1, 1)
         }
@@ -233,11 +241,12 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     }
     
     public func reset() -> Self {
-        let result = self
+        var result = self
         result.$current.write { $0 = from }
         result.$currentTime.write { $0 = 0 }
         result.$eachCurrentTime.write { $0 = 0 }
         result.$passRunCount.write { $0 = 0 }
+        result.isFinished = false
         return result
     }
     
@@ -246,6 +255,7 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         $currentTime.write { $0 = 0 }
         $eachCurrentTime.write { $0 = 0 }
         $passRunCount.write { $0 = 0 }
+        isFinished = false
     }
     
     /// - Tag: Reverse
@@ -256,6 +266,7 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         result.name = (
             newName.count == 0 ? name + ".reverse" : newName
         )
+        result.isFinished = false
         return result
     }
     
@@ -264,6 +275,7 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
             newName.count == 0 ? name + ".reverse" : newName
         )
         (from, to) = (to, from)
+        isFinished = false
     }
     
     public func cleanAndReverse(newName: String = "") -> Self {

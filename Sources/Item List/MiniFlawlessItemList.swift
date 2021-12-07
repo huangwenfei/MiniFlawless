@@ -88,8 +88,9 @@ public struct MiniFlawlessItemList<Element: MiniFlawlessSteppable> {
     
     internal func completeIt(with first: Element, last: Element) {
         switch doneFillMode {
+        case .none: break
         case .from: writeBack?(last, 1, 1)
-        case .to: writeBack?(first, 1, 1)
+        case .to:   writeBack?(first, 1, 1)
         }
         completion?(self)
     }

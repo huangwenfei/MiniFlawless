@@ -13,7 +13,7 @@ public final class MiniFlawlessGroup<Element: MiniFlawlessSteppable> {
     
     public var displayLink: CADisplayLink? = nil
     
-    public var displayActions: MiniFlawlessSignals = .init()
+    public var displayActions: MiniFlawlessSignals<Element>? = nil
     
     /// `AnimationItem` -> `AnimationItem<CGFloat>`
     /// 正常的 struct 是值类型，变成泛型后 struct 就成了 类对象
@@ -91,7 +91,7 @@ public final class MiniFlawlessGroup<Element: MiniFlawlessSteppable> {
         deinitDisplayLink()
         displayItems = []
         displayCurrentItems = []
-        displayActions.clean()
+        displayActions?.clean()
     }
     
 }
@@ -99,34 +99,34 @@ public final class MiniFlawlessGroup<Element: MiniFlawlessSteppable> {
 extension MiniFlawlessGroup {
     
     public func startAnimation() {
-        guard let link = displayLink else { return }
+//        guard let link = displayLink else { return }
         
         displayCurrentItems = displayItems
         updateState(with: .willStart)
         displayLink?.isPaused = false
         updateState(with: .start)
-        displayActions.start?(link)
+//        displayActions.start?(link)
     }
     
     public func pauseAnimation() {
-        guard let link = displayLink else { return }
+//        guard let link = displayLink else { return }
         
         displayLink?.isPaused = true
         updateState(with: .pause)
-        displayActions.pause?(link)
+//        displayActions.pause?(link)
     }
     
     public func resumeAnimation() {
-        guard let link = displayLink else { return }
+//        guard let link = displayLink else { return }
         
         displayLink?.isPaused = false
-        displayActions.resume?(link)
+//        displayActions.resume?(link)
     }
     
     public func stopAnimation() {
         displayLink?.isPaused = true
-        guard let link = displayLink else { return }
-        displayActions.stop?(link)
+//        guard let link = displayLink else { return }
+//        displayActions.stop?(link)
     }
     
     public func cleanAnimation() {

@@ -24,13 +24,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-//        setup()
+        setup()
 //        miniSpringTest()
-//        miniTweenTest()
+        miniTweenTest()
         
     }
     
-    #if false
+    #if true
     
     var mini: MiniFlawless<CGFloat>!
     
@@ -42,8 +42,8 @@ class ViewController: UIViewController {
             from: testView.frame.minY,
             to: testView.frame.minY + 300,
             stepper: .tween(.init(function: .linear)),
-            isAutoReverse: true,
-            isForeverRun: true,
+//            isAutoReverse: true,
+//            isForeverRun: true,
             repeatCount: 3,
             eachCompletion: { item in
                 print("Each Done")

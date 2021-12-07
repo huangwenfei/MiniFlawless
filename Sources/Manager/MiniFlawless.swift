@@ -12,21 +12,23 @@ import QuartzCore
 public final class MiniFlawless<Element: MiniFlawlessSteppable> {
     
     public var displayLink: CADisplayLink? = nil
-    public var displayActions: MiniFlawlessSignals = .init()
+    public var displayActions: MiniFlawlessSignals<Element>? = nil
     
     /// `AnimationItem` -> `AnimationItem<CGFloat>`
     /// 正常的 struct 是值类型，变成泛型后 struct 就成了 类对象
     public var displayItem: MiniFlawlessItem<Element>!
     
-    public init(displayItem: MiniFlawlessItem<Element>) {
+    public init(displayItem: MiniFlawlessItem<Element>, displayActions: MiniFlawlessSignals<Element>) {
         self.displayItem = displayItem
+        self.displayActions = displayActions
         initDisplayLink()
     }
     
     deinit {
         deinitDisplayLink()
         displayItem = nil
-        displayActions.clean()
+        displayActions?.clean()
+        displayActions = nil
     }
     
     @objc private func objc_display(displayLink: CADisplayLink) {
@@ -48,10 +50,6 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         
-//        displayItem.$currentTime.write {
-//            $0 += displayLink.duration
-//        }
-        
         displayItem.updateCurrentTime(by: displayLink.duration)
         
         let currentTime = displayItem.currentTime
@@ -60,10 +58,6 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         print(#function, "EachCurrentTime:", displayItem.eachCurrentTime, "CurrentTime:", currentTime)
         #endif
 
-//        displayItem.$current.write {
-//            $0 = item.stepper.step(t: currentTime)
-//        }
-        
         displayItem.updateCurrent()
         
         #if DEBUG
@@ -72,6 +66,8 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         
         /// write back
         if !displayItem.isDone { displayItem.write() }
+        
+        displayActions?.progress?(item, item.eachProgress, item.progress)
         
         /// isEachDone & eachCompletion
         if !displayItem.isDone && displayItem.isEachDone {
@@ -147,18 +143,34 @@ extension MiniFlawless {
     
     public func reversedAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
         guard displayLink != nil else { return }
-        guard displayItem != nil else { return }
+        guard let item = displayItem else { return }
         
-        self.startAnimation(delay: delay) {
+        func working() {
             self.displayItem.cleanAndReversed()
-            completion?()
+
+            displayItem.startWrite()
+            
+    //        displayItem.$state.write { $0 = .willStart }
+            displayLink?.isPaused = false
+    //        displayItem.$state.write { $0 = .start }
+            
+            uiThread {
+                self.displayActions?.start?(item)
+                completion?()
+            }
+        }
+        
+        if delay > 0 {
+            globalThread(delay: delay) { working() }
+        } else {
+            working()
         }
         
     }
     
     public func startAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
-        guard let link = displayLink else { return }
-        guard displayItem != nil else { return }
+        guard displayLink != nil else { return }
+        guard let item = displayItem else { return }
         
         func working() {
             
@@ -170,7 +182,7 @@ extension MiniFlawless {
     //        displayItem.$state.write { $0 = .start }
             
             uiThread {
-                self.displayActions.start?(link)
+                self.displayActions?.start?(item)
                 completion?()
             }
             
@@ -185,8 +197,8 @@ extension MiniFlawless {
     }
     
     public func pauseAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
-        guard let link = displayLink else { return }
-        guard displayItem != nil else { return }
+        guard displayLink != nil else { return }
+        guard let item = displayItem else { return }
         
         func working() {
             
@@ -194,7 +206,7 @@ extension MiniFlawless {
             displayLink?.isPaused = true
 //            displayItem.$state.write { $0 = .pause }
             uiThread {
-                self.displayActions.pause?(link)
+                self.displayActions?.pause?(item)
                 completion?()
             }
             
@@ -208,15 +220,15 @@ extension MiniFlawless {
     }
     
     public func resumeAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
-        guard let link = displayLink else { return }
-        guard displayItem != nil else { return }
+        guard displayLink != nil else { return }
+        guard let item = displayItem else { return }
         
         func working() {
     //        displayItem.$state.write { $0 = .willResume }
             displayLink?.isPaused = false
     //        displayItem.$state.write { $0 = .resume }
             uiThread {
-                self.displayActions.resume?(link)
+                self.displayActions?.resume?(item)
                 completion?()
             }
             
@@ -230,8 +242,8 @@ extension MiniFlawless {
     }
     
     public func stopAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
-        guard let link = displayLink else { return }
-        guard displayItem != nil else { return }
+        guard displayLink != nil else { return }
+        guard let item = displayItem else { return }
         
         func working() {
             
@@ -239,10 +251,13 @@ extension MiniFlawless {
             displayLink?.isPaused = true
     //        displayItem.$state.write { $0 = .stop }
             
+            displayItem.isFinished = displayItem.isDone
+            displayItem.completeIt()
+            
             displayItem.reseted()
             
             uiThread {
-                self.displayActions.stop?(link)
+                self.displayActions?.stop?(item)
                 completion?()
             }
             
@@ -264,7 +279,7 @@ extension MiniFlawless {
     
     public func destroyAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
         cleanAnimation(delay: delay) {
-            self.displayActions.clean()
+            self.displayActions?.clean()
             completion?()
         }
     }

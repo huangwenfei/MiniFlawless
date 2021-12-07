@@ -8,6 +8,7 @@
 import Foundation
 
 public enum MiniFlawlessItemFillMode {
+    case none
     case from
     case to
 //    case both

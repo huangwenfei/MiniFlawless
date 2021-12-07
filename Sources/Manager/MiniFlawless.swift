@@ -18,7 +18,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
     /// 正常的 struct 是值类型，变成泛型后 struct 就成了 类对象
     public var displayItem: MiniFlawlessItem<Element>!
     
-    public init(displayItem: MiniFlawlessItem<Element>, displayActions: MiniFlawlessSignals<Element>) {
+    public init(displayItem: MiniFlawlessItem<Element>, displayActions: MiniFlawlessSignals<Element>? = nil) {
         self.displayItem = displayItem
         self.displayActions = displayActions
         initDisplayLink()

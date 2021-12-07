@@ -103,6 +103,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
             uiThread {
                 self.displayItem.completeIt()
                 self.stopAnimation()
+                self.displayItem.state = .finish
                 if self.displayItem.isRemoveOnCompletion {
                     self.displayItem = nil
                 }
@@ -255,8 +256,8 @@ extension MiniFlawless {
             
             uiThread {
                 self.displayLink?.isPaused = false
-                self.displayActions?.start?(item)
                 self.displayItem.$state.write { $0 = .working }
+                self.displayActions?.start?(item)
                 completion?()
             }
             
@@ -278,11 +279,10 @@ extension MiniFlawless {
         guard item.state.canPause else { return }
         
         func working() {
-            
-//            displayItem.$state.write { $0 = .willPause }
-            displayLink?.isPaused = true
-//            displayItem.$state.write { $0 = .pause }
+    
             uiThread {
+                self.displayLink?.isPaused = true
+                self.displayItem.$state.write { $0 = .pause }
                 self.displayActions?.pause?(item)
                 completion?()
             }
@@ -304,10 +304,10 @@ extension MiniFlawless {
         guard item.state.canResume else { return }
         
         func working() {
-    //        displayItem.$state.write { $0 = .willResume }
-            displayLink?.isPaused = false
-    //        displayItem.$state.write { $0 = .resume }
+            
             uiThread {
+                self.displayLink?.isPaused = false
+                self.displayItem.$state.write { $0 = .working }
                 self.displayActions?.resume?(item)
                 completion?()
             }
@@ -330,14 +330,10 @@ extension MiniFlawless {
         
         func working() {
             
-    //        displayItem.$state.write { $0 = .willStop }
-            displayLink?.isPaused = true
-    //        displayItem.$state.write { $0 = .stop }
-            
-            displayItem.stopCompletion()
-            displayItem.reseted()
-            
             uiThread {
+                self.displayLink?.isPaused = true
+                self.displayItem.reseted()
+                self.displayItem.$state.write { $0 = .stop }
                 self.displayActions?.stop?(item)
                 completion?()
             }

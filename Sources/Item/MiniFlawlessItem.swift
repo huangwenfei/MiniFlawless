@@ -18,6 +18,10 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     @Protected
     public var state: MiniFlawlessItemState = .stop
     
+    public var isFinished: Bool {
+        state == .finish
+    }
+    
     /// Each Duration Or Total Duration
     public var duration: TimeInterval = 0 {
         didSet {
@@ -78,9 +82,6 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     /// Only vaild in Item troup .
     public var isRemoveOnCompletion: Bool = true
     
-    @Protected
-    public var isFinished: Bool = false
-    
     public typealias Completion = (Self) -> Void
     public var completion: Completion? = nil
     
@@ -91,8 +92,6 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     public var eachCompletion: Completion? = nil
     
     internal func completeIt() {
-        $isFinished.write { $0 = true }
-        
         guard doneFillMode != .none else {
             completion?(self)
             return
@@ -111,11 +110,6 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     
     internal func eachCompletIt() {
         eachCompletion?(self)
-    }
-    
-    internal func stopCompletion() {
-        $isFinished.write { $0 = isDone }
-        completion?(self)
     }
     
     /// - Tag: Repeat
@@ -254,7 +248,6 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         result.$currentTime.write { $0 = 0 }
         result.$eachCurrentTime.write { $0 = 0 }
         result.$passRunCount.write { $0 = 0 }
-        result.$isFinished.write { $0 = false }
         return result
     }
     
@@ -263,7 +256,6 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         $currentTime.write { $0 = 0 }
         $eachCurrentTime.write { $0 = 0 }
         $passRunCount.write { $0 = 0 }
-        $isFinished.write { $0 = false }
     }
     
     /// - Tag: Reverse
@@ -274,7 +266,6 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         result.name = (
             newName.count == 0 ? name + ".reverse" : newName
         )
-        result.$isFinished.write { $0 = false }
         return result
     }
     
@@ -283,7 +274,6 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
             newName.count == 0 ? name + ".reverse" : newName
         )
         (from, to) = (to, from)
-        $isFinished.write { $0 = false }
     }
     
     public func cleanAndReverse(newName: String = "") -> Self {

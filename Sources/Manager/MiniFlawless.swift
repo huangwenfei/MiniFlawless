@@ -47,8 +47,12 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         print(#function, displayLink.duration, displayLink.timestamp, displayLink.targetTimestamp)
         #endif
         
+        /// - Tag: CA Begin
+        
         CATransaction.begin()
         CATransaction.setDisableActions(true)
+        
+        /// - Tag: Current Time
         
         displayItem.updateCurrentTime(by: displayLink.duration)
         
@@ -57,7 +61,9 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         #if DEBUG
         print(#function, "EachCurrentTime:", displayItem.eachCurrentTime, "CurrentTime:", currentTime)
         #endif
-
+        
+        /// - Tag: Current
+        
         displayItem.updateCurrent()
         
         #if DEBUG
@@ -67,7 +73,11 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         /// write back
         if !displayItem.isDone { displayItem.write() }
         
+        /// - Tag: Progress Signal
+        
         displayActions?.progress?(item, item.eachProgress, item.progress)
+        
+        /// - Tag: Each Done
         
         /// isEachDone & eachCompletion
         if !displayItem.isDone && displayItem.isEachDone {
@@ -94,6 +104,8 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
             }
         }
         
+        /// - Tag: Done
+        
         /// isDone & Completion & isRemoveOnCompletion
         if displayItem.isDone {
             displayItem.updateRunCount()
@@ -109,6 +121,8 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
                 }
             }
         }
+        
+        /// - Tag: CA End
         
         CATransaction.commit()
         
@@ -149,20 +163,7 @@ extension MiniFlawless {
         
         guard item.state.canReset else { return }
         
-        func working() {
-            
-            displayItem.reseted()
-            
-            uiThread {
-                self.displayActions?.reset?(item)
-            }
-        }
-        
-        if delay > 0 {
-            globalThread(delay: delay) { working() }
-        } else {
-            working()
-        }
+        forceResetAnimation(delay: delay, completion: completion)
         
     }
     
@@ -173,12 +174,15 @@ extension MiniFlawless {
         
         func working() {
             
-            displayLink?.isPaused = true
-            
-            displayItem.reseted()
+            let isWorking = displayItem.state.isWorking
             
             uiThread {
+                if isWorking { self.displayLink?.isPaused = true }
+                self.displayItem.reseted()
+                self.displayItem.startWrite()
                 self.displayActions?.reset?(item)
+                if isWorking { self.displayLink?.isPaused = false }
+                completion?()
             }
         }
         
@@ -197,22 +201,7 @@ extension MiniFlawless {
         
         guard item.state.canReverse else { return }
         
-        func working() {
-            
-            displayItem.cleanAndReversed()
-            displayItem.startWrite()
-            
-            uiThread {
-                self.displayActions?.reverse?(item)
-                self.startAnimation(completion:  completion)
-            }
-        }
-        
-        if delay > 0 {
-            globalThread(delay: delay) { working() }
-        } else {
-            working()
-        }
+        forceReversedAnimation(delay: delay, completion: completion)
         
     }
     
@@ -223,14 +212,14 @@ extension MiniFlawless {
         
         func working() {
             
-            displayLink?.isPaused = true
-            
-            displayItem.cleanAndReversed()
-            displayItem.startWrite()
-            
             uiThread {
+                self.displayLink?.isPaused = true
+                self.displayItem.cleanAndReversed()
+                self.displayItem.startWrite()
                 self.displayActions?.reverse?(item)
-                self.startAnimation(completion:  completion)
+                self.displayLink?.isPaused = false
+                self.displayItem.$state.write { $0 = .working }
+                completion?()
             }
         }
         
@@ -304,6 +293,12 @@ extension MiniFlawless {
         guard item.state.canResume else { return }
         
         func working() {
+            
+            let shouldRestart = displayItem.state.shouldRestart
+            if shouldRestart {
+                displayItem.reseted()
+                displayItem.startWrite()
+            }
             
             uiThread {
                 self.displayLink?.isPaused = false

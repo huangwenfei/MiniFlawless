@@ -13,6 +13,10 @@ public enum MiniFlawlessItemState {
     case stop
     case finish
     
+    public var isWorking: Bool {
+        self == .working
+    }
+    
     public var canReset: Bool {
         switch self {
         case .working:
@@ -40,7 +44,11 @@ public enum MiniFlawlessItemState {
     }
     
     public var canResume: Bool {
-        self == .pause
+        canStart
+    }
+    
+    public var shouldRestart: Bool {
+        canStart && ( self != .pause )
     }
     
     public var canStop: Bool {

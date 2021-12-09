@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
 
   spec.name           = "MiniFlawless"
-  spec.version        = "0.0.2.4"
+  spec.version        = "0.0.2.5"
   spec.summary        = "Simple Animate."
   spec.description    = <<-DESC
         Simple Animate ...

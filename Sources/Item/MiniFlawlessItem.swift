@@ -35,8 +35,10 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     
     public var from: Element = .zero {
         didSet {
-            current = from
-            stepper.from = from
+            $current.write {
+                $0 = from
+                stepper.from = from
+            }
         }
     }
     
@@ -57,11 +59,11 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     public var writeBack: WriteBack? = nil
     
     public func startWrite() {
-        uiThread { self.writeBack?(from, 0, 0) }
+        self.writeBack?(from, 0, 0)
     }
     
     public func write() {
-        uiThread { self.writeBack?(current, eachProgress, progress) }
+        self.writeBack?(current, eachProgress, progress)
     }
     
     /// - Tag: Progress

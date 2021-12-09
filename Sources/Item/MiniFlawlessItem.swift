@@ -25,7 +25,7 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     /// Each Duration Or Total Duration
     public var duration: TimeInterval = 0 {
         didSet {
-            updatetDurations()
+            updatetDurations(by: stepperMode)
         }
     }
     
@@ -48,22 +48,43 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         }
     }
     
+    public private(set) var stepperMode: AnyStepperConfiguration<Element>.Mode = .tween(.init(function: .linear))
     public private(set) var stepper: MiniFlawlessStepper<Element> = .init(
         duration: 0, from: .zero, to: .zero
     )
     
     /// - Tag: Write Back
     
-    public typealias WriteBack = (_ current: Element, _ eachProgress: TimeInterval, _ progress: TimeInterval) -> Void
+    public struct CurrentInfo {
+        public var current: Element = .zero
+        public var eachProgress: TimeInterval = 0
+        public var progress: TimeInterval = 0
+        
+        public init(current: Element = .zero, eachProgress: TimeInterval = 0, progress: TimeInterval = 0) {
+            self.current = current
+            self.eachProgress = eachProgress
+            self.progress = progress
+        }
+    }
+    
+    public typealias WriteBack = (_ currentInfo: CurrentInfo) -> Void
     
     public var writeBack: WriteBack? = nil
     
     public func startWrite() {
-        self.writeBack?(from, 0, 0)
+        self.writeBack?(
+            .init(current: from, eachProgress: 0, progress: 0)
+        )
     }
     
     public func write() {
-        self.writeBack?(current, eachProgress, progress)
+        self.writeBack?(
+            .init(
+                current: current,
+                eachProgress: eachProgress,
+                progress: progress
+            )
+        )
     }
     
     /// - Tag: Progress
@@ -94,20 +115,29 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     public var eachCompletion: Completion? = nil
     
     internal func completeIt() {
-        guard doneFillMode != .none else {
-            completion?(self)
-            return
+        
+        defer { completion?(self) }
+        
+        if doneFillMode != .none {
+            
+            let isReverse = isAutoReverse && (passRunCount % 2 == 0)
+            let from = isReverse ? self.to : self.from
+            let to = isReverse ? self.from : self.to
+            
+            var info = CurrentInfo.init(
+                current: .zero,
+                eachProgress: 1,
+                progress: 1
+            )
+            
+            switch doneFillMode {
+            case .none: break
+            case .from: info.current = from ; writeBack?(info)
+            case .to:   info.current = to   ; writeBack?(info)
+            }
+        
         }
         
-        let isReverse = isAutoReverse && (passRunCount % 2 == 0)
-        let from = isReverse ? self.to : self.from
-        let to = isReverse ? self.from : self.to
-        switch doneFillMode {
-        case .none: break
-        case .from: writeBack?(from, 1, 1)
-        case .to:   writeBack?(to, 1, 1)
-        }
-        completion?(self)
     }
     
     internal func eachCompletIt() {
@@ -176,7 +206,7 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     
     /// - Tag: Init
     
-    public init(name: String = "", duration: TimeInterval, from: Element, to: Element, stepper: AnyStepperConfiguration<Element>.Mode, isAutoReverse: Bool = false, isForeverRun: Bool = false, repeatCount: Int = 1, eachCompletion: Completion? = nil, writeBack: WriteBack? = nil, isRemoveOnCompletion: Bool = false, doneFillMode: MiniFlawlessItemFillMode = .to, completion: Completion? = nil) {
+    public init(name: String = "", duration: TimeInterval, from: Element, to: Element, stepper: AnyStepperConfiguration<Element>.Mode, isAutoReverse: Bool = false, isForeverRun: Bool = false, repeatCount: Int = 1, eachCompletion: Completion? = nil, writeBack: WriteBack? = nil, isRemoveOnCompletion: Bool = false, doneFillMode: MiniFlawlessItemFillMode = .none, completion: Completion? = nil) {
         
         self.name = name
         self.duration = duration
@@ -193,13 +223,16 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         self.current = from
         
         updateStepper(by: stepper)
-        updatetDurations()
+        updatetDurations(by: stepper)
         
     }
     
     /// - Tag: Update
     
     public mutating func updateStepper(by new: AnyStepperConfiguration<Element>.Mode) {
+        
+        self.stepperMode = new
+        
         switch new {
         case let .spring(configs):
             stepper = MiniFlawlessSpringStepper<Element>.init(
@@ -217,14 +250,20 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         }
     }
     
-    private mutating func updatetDurations() {
+    private mutating func updatetDurations(by new: AnyStepperConfiguration<Element>.Mode) {
         
-        let count: TimeInterval = .init(runCount)
-        let duration = self.duration < 0 ? 0.25 : self.duration
+        let duration: TimeInterval
+        switch new {
+        case .spring:
+            duration = stepper.duration
+            eachDuration = duration * (isAutoReverse ? 2 : 1)
+            
+        case .tween:
+            duration = self.duration < 0 ? 0.25 : self.duration
+            eachDuration = duration * (isAutoReverse ? 0.5 : 1)
+        }
         
-        eachDuration = duration * (isAutoReverse ? 0.5 : 1)
-        
-        totalDuration = eachDuration * count
+        totalDuration = eachDuration * .init(runCount)
         
         stepper.duration = eachDuration
         

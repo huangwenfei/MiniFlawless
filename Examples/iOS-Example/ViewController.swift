@@ -25,8 +25,8 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         setup()
-//        miniSpringTest()
-        miniTweenTest()
+        miniSpringTest()
+//        miniTweenTest()
         
     }
     
@@ -48,10 +48,12 @@ class ViewController: UIViewController {
             eachCompletion: { item in
                 print("Each Done")
             },
-            writeBack: { [weak self] in
+            writeBack: { [weak self] info in
                 guard let self = self else { return }
-                self.testView.frame.origin.y = $0
-                print(#function, "eachProgress:", $1, "progress:", $2)
+                DispatchQueue.main.async {
+                    self.testView.frame.origin.y = info.current
+                    print(#function, "eachProgress:", info.eachProgress, "progress:", info.progress)
+                }
             },
             isRemoveOnCompletion: false,
             doneFillMode: .from
@@ -83,7 +85,7 @@ class ViewController: UIViewController {
             to: testView.frame.minY + 300,
             stepper: .spring(
                 .init(
-                    damping: 10,
+                    damping: 1, /// 10,
                     mass: 1,
                     stiffness: 100,
                     initialVelocity: 0,
@@ -97,13 +99,14 @@ class ViewController: UIViewController {
             eachCompletion: { item in
                 print("Each Done")
             },
-            writeBack: { [weak self] in
+            writeBack: { [weak self] info in
                 guard let self = self else { return }
-                self.testView.frame.origin.y = $0
-                print(#function, "eachProgress:", $1, "progress:", $2)
+                DispatchQueue.main.async {
+                    self.testView.frame.origin.y = info.current
+                    print(#function, "eachProgress:", info.eachProgress, "progress:", info.progress)
+                }
             },
-            isRemoveOnCompletion: false,
-            doneFillMode: .from
+            isRemoveOnCompletion: false
         ) { item in
             print("Done")
         }

@@ -116,17 +116,26 @@ extension MiniFlawlessSpringStepper {
         
         /// Defines how the spring’s motion should be damped due to the forces of friction.
         public var damping: CGFloat = 10 {
-            didSet { update(self) }
+            didSet {
+                update(self)
+                durationUpdate(epsilon)
+            }
         }
         
         /// The mass of the object attached to the end of the spring.
         public var mass: CGFloat = 1 {
-            didSet { update(self) }
+            didSet {
+                update(self)
+                durationUpdate(epsilon)
+            }
         }
         
         /// The spring stiffness coefficient.
         public var stiffness: CGFloat = 100 {
-            didSet { update(self) }
+            didSet {
+                update(self)
+//                durationUpdate(epsilon)
+            }
         }
         
         /// The initial velocity of the object attached to the spring.

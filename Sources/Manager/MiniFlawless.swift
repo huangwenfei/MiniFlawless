@@ -41,7 +41,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
             let item = displayItem,
             item.state == .working
         else {
-            #if DEBUG
+            #if false && DEBUG
             print(#function, "Display Done !!!")
             #endif
             self.displayItem.$state.write { $0 = .finish }
@@ -64,7 +64,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         
         let currentTime = displayItem.currentTime
         
-        #if DEBUG
+        #if false && DEBUG
         print(#function, "EachCurrentTime:", displayItem.eachCurrentTime, "CurrentTime:", currentTime)
         #endif
         
@@ -72,7 +72,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         
         displayItem.updateCurrent()
         
-        #if DEBUG
+        #if false && DEBUG
         print(#function, "CurrentValue:", displayItem.current)
         #endif
         
@@ -90,7 +90,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
             
             displayItem.updateRunCount()
             
-            #if DEBUG
+            #if false && DEBUG
             print(#function, "RunCount:", displayItem.passRunCount)
             #endif
             
@@ -118,7 +118,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
             
             /// - Tag: Update Last Count
             displayItem.updateRunCount()
-            #if DEBUG
+            #if false && DEBUG
             print(#function, "RunCount:", displayItem.passRunCount)
             #endif
             
@@ -338,7 +338,7 @@ extension MiniFlawless {
         
         func working() {
             
-            #if DEBUG
+            #if false && DEBUG
             print(#function, "Stop ...")
             #endif
             

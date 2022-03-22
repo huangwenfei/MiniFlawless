@@ -4,7 +4,4 @@
    <FileRef
       location = "group:MiniFlawless.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Examples/iOS-Example.xcodeproj">
-   </FileRef>
 </Workspace>

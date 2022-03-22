@@ -24,15 +24,15 @@ public class MiniFlawlessTweenStepper<Element: MiniFlawlessSteppable>: MiniFlawl
         let function = configuration.function
         
         let factor = function.step(t: time / duration)
-        #if DEBUG
+        #if false && DEBUG
         print(#function, "factor", factor, "distance", distance)
         #endif
         let offset = factor --* distance
-        #if DEBUG
+        #if false && DEBUG
         print(#function, "offset", offset)
         #endif
         let current = from --+ offset
-        #if DEBUG
+        #if false && DEBUG
         print(#function, "current", current)
         #endif
         return current

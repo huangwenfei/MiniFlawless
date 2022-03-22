@@ -2,6 +2,8 @@
 //  ViewController.swift
 //  iOS-Example
 //
+//  https://easings.net/
+//
 //  Created by 黄文飞 on 2021/12/4.
 //
 
@@ -25,8 +27,10 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         setup()
-        miniSpringTest()
+//        miniSpringTest()
 //        miniTweenTest()
+        
+        miniTweenAlphaTest(isIn: false)
         
     }
     
@@ -38,7 +42,7 @@ class ViewController: UIViewController {
         
         let item = MiniFlawlessItem<CGFloat>.init(
             name: "Test",
-            duration: 1,
+            duration: 1.5,
             from: testView.frame.minY,
             to: testView.frame.minY + 300,
             stepper: .tween(.init(function: .linear)),
@@ -141,6 +145,31 @@ class ViewController: UIViewController {
     }
     #endif
 
+    
+    #if true
+    func miniTweenAlphaTest(isIn: Bool = true) {
+        
+        let item = MiniFlawlessItem<CGFloat>.init(
+            name: "Test Alpha",
+            duration: 0.75,
+            from: isIn ? 0 : 100,
+            to: isIn ? 100 : 0,
+            stepper: .tween(.init(function: isIn ? .easeInBounce : .easeOutBounce)),
+            writeBack: { info in
+                print(info.current)
+            },
+            isRemoveOnCompletion: false,
+            doneFillMode: .none
+        )
+        
+        let mini = MiniFlawless.init(displayItem: item, framesPerSecond: 16)
+        self.mini = mini
+        
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+            mini.startAnimation()
+        }
+    }
+    #endif
 
 }
 

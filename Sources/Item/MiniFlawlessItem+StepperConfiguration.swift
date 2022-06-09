@@ -16,6 +16,9 @@ public struct AnyStepperConfiguration<Element: MiniFlawlessSteppable> {
     public enum Mode {
         case spring(MiniFlawlessSpringStepper<Element>.Configuration)
         case tween(MiniFlawlessTweenStepper<Element>.Configuration)
+        /// ignore duration & from & to
+        case mechanics(MiniFlawlessMechanicsStepper<Element>.Configuration)
     }
     public var mode: Mode = .tween(.init(function: .linear))
+    
 }

@@ -8,7 +8,7 @@
 import Foundation
 import CoreGraphics
 
-public class MiniFlawlessSpringStepper<Element: MiniFlawlessSteppable>: MiniFlawlessStepper<Element> {
+open class MiniFlawlessSpringStepper<Element: MiniFlawlessSteppable>: MiniFlawlessStepper<Element> {
 
     open var configuration: Configuration
     
@@ -26,7 +26,7 @@ public class MiniFlawlessSpringStepper<Element: MiniFlawlessSteppable>: MiniFlaw
             self.oscillationBlock = self.oscillation()
         }
         
-        self.configuration.durationUpdate = {[weak self] e in
+        self.configuration.durationUpdate = { [weak self] e in
             guard let self = self else { return }
             
             self.duration = self.duration(for: e)

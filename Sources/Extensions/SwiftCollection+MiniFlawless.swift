@@ -21,4 +21,18 @@ extension Array where Self.Element: MiniFlawlessSteppable {
         rhs.map { lhs --* $0 }
     }
     
+    
+    public static func --/ (lhs: TimeInterval, rhs: Self) -> Self {
+        distanceDivide(lhs: lhs, rhs: rhs)
+    }
+    
+    public static func --/ (lhs: Self, rhs: TimeInterval) -> Self {
+        distanceDivide(lhs: rhs, rhs: lhs)
+    }
+    
+    private static func distanceDivide(lhs: TimeInterval, rhs: Self) -> Self {
+        rhs.map { lhs --/ $0 }
+    }
+    
 }
+

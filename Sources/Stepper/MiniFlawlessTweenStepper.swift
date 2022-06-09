@@ -8,7 +8,7 @@
 import Foundation
 import CoreGraphics
 
-public class MiniFlawlessTweenStepper<Element: MiniFlawlessSteppable>: MiniFlawlessStepper<Element> {
+open class MiniFlawlessTweenStepper<Element: MiniFlawlessSteppable>: MiniFlawlessStepper<Element> {
 
     open var configuration: Configuration
     
@@ -17,24 +17,30 @@ public class MiniFlawlessTweenStepper<Element: MiniFlawlessSteppable>: MiniFlawl
         super.init(duration: duration, from: from, to: to)
     }
     
-    public override func step(t: TimeInterval) -> Element {
+    open override func step(t: TimeInterval) -> Element {
 
         let time = min(max(t, 0), duration)
         
         let function = configuration.function
         
         let factor = function.step(t: time / duration)
+        
         #if false && DEBUG
         print(#function, "factor", factor, "distance", distance)
         #endif
+        
         let offset = factor --* distance
+        
         #if false && DEBUG
         print(#function, "offset", offset)
         #endif
+        
         let current = from --+ offset
+        
         #if false && DEBUG
         print(#function, "current", current)
         #endif
+        
         return current
         
     }

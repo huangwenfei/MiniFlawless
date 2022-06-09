@@ -13,9 +13,18 @@ extension MiniFlawlessSteppable where Self: BinaryInteger {
     
     public var elements: Distance { [.init(self)] }
     
-    public static func --- (lhs: Self, rhs: Self) -> Distance {
+    public static prefix func --- (value: Self) -> Self {
+        .zero - value
+    }
+    
+    public static func --- (lhs: Self, rhs: Self) -> Self {
+        .init(exactly: Double(lhs) - Double(rhs)) ?? 0
+    }
+    
+    public static func ---> (lhs: Self, rhs: Self) -> Distance {
         [.init(lhs - rhs)]
     }
+    
     
     public static func --+ (lhs: Self, rhs: Self) -> Self {
         lhs + rhs
@@ -31,8 +40,9 @@ extension MiniFlawlessSteppable where Self: BinaryInteger {
     
     public static func distanceAdd (lhs: Distance, rhs: Self) -> Self {
         guard lhs.count >= 1 else { return rhs }
-        return .init(exactly: round(lhs[0]) + .init(rhs)) ?? 0
+        return .init(exactly: Double(lhs[0]) + Double(rhs)) ?? 0
     }
+    
     
     public static func --* <I: BinaryInteger>(lhs: I, rhs: Self) -> Self {
         distanceMultiply(lhs: lhs, rhs: rhs)
@@ -55,7 +65,24 @@ extension MiniFlawlessSteppable where Self: BinaryInteger {
     }
     
     private static func distanceMultiply<F: BinaryFloatingPoint>(lhs: F, rhs: Self) -> Self {
-        .init(exactly: round(lhs) * .init(rhs)) ?? 0
+        .init(exactly: Double(lhs) * Double(rhs)) ?? 0
+    }
+    
+    
+    public static func --/ <I: BinaryInteger>(lhs: I, rhs: Self) -> Self {
+        .init(exactly: Double(lhs) / Double(rhs)) ?? 0
+    }
+    
+    public static func --/ <I: BinaryInteger>(lhs: Self, rhs: I) -> Self {
+        .init(exactly: Double(lhs) / Double(rhs)) ?? 0
+    }
+    
+    public static func --/ <F: BinaryFloatingPoint>(lhs: F, rhs: Self) -> Self {
+        .init(exactly: Double(lhs) / Double(rhs) ) ?? 0
+    }
+    
+    public static func --/ <F: BinaryFloatingPoint>(lhs: Self, rhs: F) -> Self {
+        .init(exactly: Double(lhs) / Double(rhs)) ?? 0
     }
     
 }
@@ -71,3 +98,38 @@ extension UInt8: MiniFlawlessSteppable  { }
 extension UInt16: MiniFlawlessSteppable { }
 extension UInt32: MiniFlawlessSteppable { }
 extension UInt64: MiniFlawlessSteppable { }
+
+
+extension MiniFlawlessMechanicsSteppable where Self: BinaryInteger {
+    
+    public var length: Double {
+        .init(self)
+    }
+    
+    public func distance(toSegment segment: (from: Self, to: Self)) -> Double {
+        let from = abs(Int64(self) - Int64(segment.from))
+        let to = abs(Int64(self) - Int64(segment.to))
+        return Double(min(from, to))
+    }
+    
+}
+
+extension MiniFlawlessMechanicsSteppable where Self: BinaryInteger & SignedNumeric {
+    
+    public var length: Double {
+        .init(exactly: Swift.abs(self)) ?? 0
+    }
+    
+}
+
+extension Int: MiniFlawlessMechanicsSteppable   { }
+extension Int8: MiniFlawlessMechanicsSteppable  { }
+extension Int16: MiniFlawlessMechanicsSteppable { }
+extension Int32: MiniFlawlessMechanicsSteppable { }
+extension Int64: MiniFlawlessMechanicsSteppable { }
+
+extension UInt: MiniFlawlessMechanicsSteppable   { }
+extension UInt8: MiniFlawlessMechanicsSteppable  { }
+extension UInt16: MiniFlawlessMechanicsSteppable { }
+extension UInt32: MiniFlawlessMechanicsSteppable { }
+extension UInt64: MiniFlawlessMechanicsSteppable { }

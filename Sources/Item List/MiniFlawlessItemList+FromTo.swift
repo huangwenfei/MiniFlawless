@@ -12,6 +12,10 @@ public struct MiniFlawlessItemListFromTo<Element: MiniFlawlessSteppable> {
     public var duration: TimeInterval = 0
     public var from: Element = .zero
     public var to: Element = .zero
+    
+    @Protected
+    internal var current: Element = .zero
+    
     public private(set) var stepper: MiniFlawlessStepper<Element> = .init(
         duration: 0, from: .zero, to: .zero
     )
@@ -28,6 +32,7 @@ public struct MiniFlawlessItemListFromTo<Element: MiniFlawlessSteppable> {
     }
     
     public mutating func updateStepper(by new: AnyStepperConfiguration<Element>.Mode) {
+        
         switch new {
         case let .spring(configs):
             stepper = MiniFlawlessSpringStepper<Element>.init(
@@ -42,7 +47,18 @@ public struct MiniFlawlessItemListFromTo<Element: MiniFlawlessSteppable> {
                 from: from,
                 to: to
             )
+            
+        case let .mechanics(configs):
+            stepper = MiniFlawlessMechanicsStepper<Element>.init(
+                configuration: configs
+            )
+            
+            self.duration = stepper.duration
+            self.from = stepper.from
+            self.to = stepper.to
+            self.current = from
         }
+        
     }
     
 }

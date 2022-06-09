@@ -19,7 +19,7 @@ internal func uiThread(delay: TimeInterval = 0, _ closure: @escaping () -> Void)
     }
 }
 
-internal func         globalThread(delay: TimeInterval = 0, _ closure: @escaping () -> Void) {
+internal func globalThread(delay: TimeInterval = 0, _ closure: @escaping () -> Void) {
     if delay > 0 {
         DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
             closure()

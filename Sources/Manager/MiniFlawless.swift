@@ -15,9 +15,13 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
     
     /// `AnimationItem` -> `AnimationItem<CGFloat>`
     /// 正常的 struct 是值类型，变成泛型后 struct 就成了 类对象
-    public var displayItem: MiniFlawlessItem<Element>!
+    
+    public typealias Item = MiniFlawlessItem<Element>
+    
+    public var displayItem: Item!
     
     public var framesPerSecond: Int = framesPerSecond
+    /// iPad Pro: 120
     public static var framesPerSecond: Int { 60 }
     
     public var displayActions: MiniFlawlessSignals<Element>? = nil
@@ -39,6 +43,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
     @objc private func objc_display(displayLink: CADisplayLink) {
         guard
             let item = displayItem,
+            item.isVaild,
             item.state == .working
         else {
             #if false && DEBUG
@@ -62,10 +67,8 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
         
         displayItem.updateCurrentTime(by: displayLink.duration)
         
-        let currentTime = displayItem.currentTime
-        
         #if false && DEBUG
-        print(#function, "EachCurrentTime:", displayItem.eachCurrentTime, "CurrentTime:", currentTime)
+        print(#function, "EachCurrentTime:", displayItem.eachCurrentTime, "CurrentTime:", displayItem.currentTime)
         #endif
         
         /// - Tag: Current
@@ -251,6 +254,7 @@ extension MiniFlawless {
             
             #if false && DEBUG
             print(#function, "Start ...")
+            print()
             #endif
             
             displayItem.reseted()
@@ -340,6 +344,7 @@ extension MiniFlawless {
             
             #if false && DEBUG
             print(#function, "Stop ...")
+            print()
             #endif
             
             self.displayLink?.isPaused = true

@@ -197,14 +197,6 @@ extension MiniFlawlessMechanicsStepper {
             return TimeInterval(log(1.0 + dCoeff * (destinationLimit --- initialValue).length / initialVelocity.length) / dCoeff)
         }
         
-        public var limitTo: Value {
-            guard let destinationLimit = destinationLimit else {
-                return to
-            }
-            
-            return current(at: limitDuration)
-        }
-        
         public var duration: TimeInterval {
             guard initialVelocity.length > 0 else { return 0 }
             

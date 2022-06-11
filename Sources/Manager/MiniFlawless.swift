@@ -329,6 +329,30 @@ extension MiniFlawless {
         }
     }
     
+    public func finishAnimation() {
+        
+        /// - Tag: Pause
+        self.displayLink?.isPaused = true
+        
+        /// - Tag: Update Last Count
+        displayItem.updateRunCount()
+        #if false && DEBUG
+        print(#function, "RunCount:", displayItem.passRunCount)
+        #endif
+        
+        /// - Tag: Set Last State
+        self.displayItem.$state.write { $0 = .finish }
+        self.displayItem.completeIt()
+        
+        /// - Tag: Remove On Completion
+        if self.displayItem.isRemoveOnCompletion {
+            self.displayItem = nil
+        }
+        
+        self.displayItem.reseted()
+        
+    }
+    
     public func stopAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
         
         guard displayLink != nil else { return }

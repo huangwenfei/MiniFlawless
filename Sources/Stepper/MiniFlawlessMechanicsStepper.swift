@@ -139,6 +139,7 @@ extension MiniFlawlessMechanicsStepper {
         
         public var initialValue: Element
         public var destinationLimit: Element?
+        public var durationMax: TimeInterval?
         public var initialVelocity: Element
         public var decelerationRate: Double
         public var threshold: Double
@@ -148,6 +149,7 @@ extension MiniFlawlessMechanicsStepper {
             \(Self.self) {
                 initialValue: \(initialValue),
                 destinationLimit: \(String(describing: destinationLimit)),
+                durationMax: \(String(describing: durationMax)),
                 initialVelocity: \(initialVelocity),
                 decelerationRate: \(decelerationRate),
                 threshold: \(threshold)
@@ -155,12 +157,13 @@ extension MiniFlawlessMechanicsStepper {
             """
         }
         
-        public init(initialValue: Element = .zero, initialVelocity: Element = .zero, destinationLimit: Element? = nil, decelerationRate: Double = 0.998, threshold: Double = .zero) {
+        public init(initialValue: Element = .zero, initialVelocity: Element = .zero, destinationLimit: Element? = nil, durationMax: TimeInterval? = nil, decelerationRate: Double = 0.998, threshold: Double = .zero) {
             
             assert(decelerationRate > 0 && decelerationRate < 1)
             
             self.initialValue = initialValue
             self.destinationLimit = destinationLimit
+            self.durationMax = durationMax
             self.initialVelocity = initialVelocity
             self.decelerationRate = decelerationRate
             self.threshold = threshold
@@ -172,6 +175,7 @@ extension MiniFlawlessMechanicsStepper {
             
             self.initialValue = other.initialValue
             self.destinationLimit = other.destinationLimit
+            self.durationMax = other.durationMax
             self.initialVelocity = other.initialVelocity
             self.decelerationRate = other.decelerationRate
             self.threshold = other.threshold
@@ -193,11 +197,25 @@ extension MiniFlawlessMechanicsStepper {
             return TimeInterval(log(1.0 + dCoeff * (destinationLimit --- initialValue).length / initialVelocity.length) / dCoeff)
         }
         
+        public var limitTo: Value {
+            guard let destinationLimit = destinationLimit else {
+                return to
+            }
+            
+            return current(at: limitDuration)
+        }
+        
         public var duration: TimeInterval {
             guard initialVelocity.length > 0 else { return 0 }
             
             let dCoeff = 1000 * log(decelerationRate)
-            return TimeInterval(log(-dCoeff * threshold / initialVelocity.length) / dCoeff)
+            let result = TimeInterval(log(-dCoeff * threshold / initialVelocity.length) / dCoeff)
+            
+            if let durationMax = durationMax {
+                return min(result, durationMax)
+            } else {
+                return result
+            }
         }
         
         public func current(at time: TimeInterval) -> Value {

@@ -10,7 +10,7 @@ import CoreGraphics
 import QuartzCore.CADisplayLink
 
 extension NSObject {
-    open func miiniFlawless_step(diffCount: CGFloat, duration: CGFloat, framePerSecond: Int) -> CGFloat {
+    public func miiniFlawless_step(diffCount: CGFloat, duration: CGFloat, framePerSecond: Int) -> CGFloat {
         diffCount / (duration * CGFloat(framePerSecond))
     }
 }

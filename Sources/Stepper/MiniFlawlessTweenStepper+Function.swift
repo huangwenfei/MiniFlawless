@@ -15,7 +15,7 @@ public protocol MiniFlawlessTweenFunctionable {
 
 public struct MiniFlawlessTweenStepperFunction {
     
-    public enum Function {
+    public enum Function: Int, CaseIterable {
         case linear
         case easeInQuadratic
         case easeOutQuadratic
@@ -70,7 +70,7 @@ public struct MiniFlawlessTweenStepperFunction {
             case .easeOutCircular:      return EaseOutCircular.self
             case .easeInOutCircular:    return EaseInOutCircular.self
             case .easeInExponencial:    return EaseInExponencial.self
-            case .easeOutExponencial:   return EaseInExponencial.self
+            case .easeOutExponencial:   return EaseOutExponencial.self
             case .easeInOutExponencial: return EaseInOutExponencial.self
             case .easeInElastic:        return EaseInElastic.self
             case .easeOutElastic:       return EaseOutElastic.self
@@ -81,6 +81,47 @@ public struct MiniFlawlessTweenStepperFunction {
             case .easeInBounce:         return EaseInBounce.self
             case .easeOutBounce:        return EaseOutBounce.self
             case .easeInOutBounce:      return EaseInOutBounce.self
+            }
+        }
+        
+        public var name: String {
+            "\(value.self)"
+        }
+        
+        public init?(name: String) {
+            switch name {
+            case "Linear":               self = .linear
+            case "EaseInQuadratic":      self = .easeInQuadratic
+            case "EaseOutQuadratic":     self = .easeOutQuadratic.self
+            case "EaseInOutQuadratic":   self = .easeInOutQuadratic.self
+            case "EaseInCubic":          self = .easeInCubic.self
+            case "EaseOutCubic":         self = .easeOutCubic.self
+            case "EaseInOutCubic":       self = .easeInOutCubic.self
+            case "EaseInQuartic":        self = .easeInQuartic.self
+            case "EaseOutQuartic":       self = .easeOutQuartic.self
+            case "EaseInOutQuartic":     self = .easeInOutQuartic.self
+            case "EaseInQuintic":        self = .easeInQuintic.self
+            case "EaseOutQuintic":       self = .easeOutQuintic.self
+            case "EaseInOutQuintic":     self = .easeInOutQuintic.self
+            case "EaseInSine":           self = .easeInSine.self
+            case "EaseOutSine":          self = .easeOutSine.self
+            case "EaseInOutSine":        self = .easeInOutSine.self
+            case "EaseInCircular":       self = .easeInCircular.self
+            case "EaseOutCircular":      self = .easeOutCircular.self
+            case "EaseInOutCircular":    self = .easeInOutCircular.self
+            case "EaseInExponencial":    self = .easeInExponencial.self
+            case "EaseOutExponencial":   self = .easeOutExponencial.self
+            case "EaseInOutExponencial": self = .easeInOutExponencial.self
+            case "EaseInElastic":        self = .easeInElastic.self
+            case "EaseOutElastic":       self = .easeOutElastic.self
+            case "EaseInOutElastic":     self = .easeInOutElastic.self
+            case "EaseInBack":           self = .easeInBack.self
+            case "EaseOutBack":          self = .easeOutBack.self
+            case "EaseInOutBack":        self = .easeInOutBack.self
+            case "EaseInBounce":         self = .easeInBounce.self
+            case "EaseOutBounce":        self = .easeOutBounce.self
+            case "EaseInOutBounce":      self = .easeInOutBounce.self
+            default:                     self = .linear
             }
         }
     }

@@ -9,6 +9,8 @@ import Foundation
 import CoreGraphics
 
 open class MiniFlawlessSpringStepper<Element: MiniFlawlessSteppable>: MiniFlawlessStepper<Element> {
+    
+    public typealias Configuration = MiniFlawlessSpringStepperConfiguration
 
     open var configuration: Configuration
     
@@ -111,58 +113,56 @@ open class MiniFlawlessSpringStepper<Element: MiniFlawlessSteppable>: MiniFlawle
     
 }
 
-extension MiniFlawlessSpringStepper {
-    public struct Configuration {
-        
-        /// Defines how the spring’s motion should be damped due to the forces of friction.
-        public var damping: CGFloat = 10 {
-            didSet {
-                update(self)
-                durationUpdate(epsilon)
-            }
+public struct MiniFlawlessSpringStepperConfiguration {
+    
+    /// Defines how the spring’s motion should be damped due to the forces of friction.
+    public var damping: CGFloat = 10 {
+        didSet {
+            update(self)
+            durationUpdate(epsilon)
         }
-        
-        /// The mass of the object attached to the end of the spring.
-        public var mass: CGFloat = 1 {
-            didSet {
-                update(self)
-                durationUpdate(epsilon)
-            }
-        }
-        
-        /// The spring stiffness coefficient.
-        public var stiffness: CGFloat = 100 {
-            didSet {
-                update(self)
-//                durationUpdate(epsilon)
-            }
-        }
-        
-        /// The initial velocity of the object attached to the spring.
-        public var initialVelocity: CGFloat = 0 {
-            didSet { update(self) }
-        }
-        
-        public var epsilon: CGFloat = 0.01 {
-           didSet { durationUpdate(epsilon) }
-        }
-
-        public var allowsOverdamping: Bool = false {
-            didSet { update(self) }
-        }
-        
-        internal var update: (Self) -> Void = { _ in  }
-        internal var durationUpdate: (_ epsilon: CGFloat) -> Void = { _ in }
-        
-        public init(damping: CGFloat = 10, mass: CGFloat = 1, stiffness: CGFloat = 100, initialVelocity: CGFloat = 0, epsilon: CGFloat = 0.01, allowsOverdamping: Bool = false)
-        {
-            self.damping = damping
-            self.mass = mass
-            self.stiffness = stiffness
-            self.initialVelocity = initialVelocity
-            self.epsilon = epsilon
-            self.allowsOverdamping = allowsOverdamping
-        }
-        
     }
+    
+    /// The mass of the object attached to the end of the spring.
+    public var mass: CGFloat = 1 {
+        didSet {
+            update(self)
+            durationUpdate(epsilon)
+        }
+    }
+    
+    /// The spring stiffness coefficient.
+    public var stiffness: CGFloat = 100 {
+        didSet {
+            update(self)
+//                durationUpdate(epsilon)
+        }
+    }
+    
+    /// The initial velocity of the object attached to the spring.
+    public var initialVelocity: CGFloat = 0 {
+        didSet { update(self) }
+    }
+    
+    public var epsilon: CGFloat = 0.01 {
+       didSet { durationUpdate(epsilon) }
+    }
+
+    public var allowsOverdamping: Bool = false {
+        didSet { update(self) }
+    }
+    
+    internal var update: (Self) -> Void = { _ in  }
+    internal var durationUpdate: (_ epsilon: CGFloat) -> Void = { _ in }
+    
+    public init(damping: CGFloat = 10, mass: CGFloat = 1, stiffness: CGFloat = 100, initialVelocity: CGFloat = 0, epsilon: CGFloat = 0.01, allowsOverdamping: Bool = false)
+    {
+        self.damping = damping
+        self.mass = mass
+        self.stiffness = stiffness
+        self.initialVelocity = initialVelocity
+        self.epsilon = epsilon
+        self.allowsOverdamping = allowsOverdamping
+    }
+    
 }

@@ -1,6 +1,0 @@
-framework module MiniFlawless {
-  umbrella header "MiniFlawless-umbrella.h"
-
-  export *
-  module * { export * }
-}

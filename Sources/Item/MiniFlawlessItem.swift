@@ -16,15 +16,16 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     public var name: String = ""
     
     @Protected
-    public var state: MiniFlawlessItemState = .stop
+    public private(set) var state: MiniFlawlessItemState = .stop
     
     public var isFinished: Bool {
         state == .finish
     }
     
     /// Each Duration Or Total Duration
+    @Protected
     public var duration: TimeInterval = 0 {
-        didSet {
+        mutating didSet {
             updatetDurations(by: stepperMode)
         }
     }
@@ -59,7 +60,8 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         }
     }
     
-    public private(set) var stepperMode: AnyStepperConfiguration<Element>.Mode = .tween(.init(function: .linear))
+    public private(set) var stepperMode: AnyStepperConfiguration<Element>.Mode = .tween(.linear)
+    
     public private(set) var stepper: MiniFlawlessStepper<Element> = .init(
         duration: 0, from: .zero, to: .zero
     )
@@ -133,6 +135,10 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
         min(max(currentTime / totalDuration, 0), 1)
     }
     
+    public var isPlaying: Bool {
+        state.isWorking
+    }
+    
     /// - Tag: Completion
     
     /// Only vaild in Item troup .
@@ -179,11 +185,26 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     
     /// - Tag: Repeat
     
-    public var isAutoReverse: Bool = false
-    public var isForeverRun: Bool = false
+    @Protected
+    public var isAutoReverse: Bool = false {
+        mutating didSet {
+            updatetDurations(by: stepperMode)
+        }
+    }
     
     @Protected
-    public var repeatCount: Int = 0
+    public var isForeverRun: Bool = false {
+        mutating didSet {
+            updatetDurations(by: stepperMode)
+        }
+    }
+    
+    @Protected
+    public var repeatCount: Int = 0 {
+        mutating didSet {
+            updatetDurations(by: stepperMode)
+        }
+    }
     
     private let futureCount: Int = 10000
 

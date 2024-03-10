@@ -46,7 +46,7 @@ class TweenViewController: BaseViewController, UIPickerViewDelegate, UIPickerVie
             duration: getDuration(),
             from: testView.frame.minY,
             to: testView.frame.minY + 240,
-            stepper: .tween(.init(function: .linear)),
+            stepper: .tween(.linear),
             isAutoReverse: autoReverseSwitch.isOn,
             isForeverRun: infiniteSwitch.isOn,
             repeatCount: getRepeatCount(),

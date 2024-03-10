@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		23F236112B9C3A5500B0D6AC /* SpringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F236102B9C3A5500B0D6AC /* SpringViewController.swift */; };
 		23F236132B9C3A5D00B0D6AC /* TweenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F236122B9C3A5D00B0D6AC /* TweenViewController.swift */; };
-		23F236152B9C3B1C00B0D6AC /* MechanicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F236142B9C3B1C00B0D6AC /* MechanicsViewController.swift */; };
 		23F236172B9C3B4000B0D6AC /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F236162B9C3B4000B0D6AC /* BaseViewController.swift */; };
 		23F2361A2B9C483A00B0D6AC /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 23F236192B9C483A00B0D6AC /* IQKeyboardManagerSwift */; };
 		831435F1275BC60600136266 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831435F0275BC60600136266 /* AppDelegate.swift */; };
@@ -22,7 +21,6 @@
 /* Begin PBXFileReference section */
 		23F236102B9C3A5500B0D6AC /* SpringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpringViewController.swift; sourceTree = "<group>"; };
 		23F236122B9C3A5D00B0D6AC /* TweenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweenViewController.swift; sourceTree = "<group>"; };
-		23F236142B9C3B1C00B0D6AC /* MechanicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MechanicsViewController.swift; sourceTree = "<group>"; };
 		23F236162B9C3B4000B0D6AC /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		831435ED275BC60600136266 /* iOS-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		831435F0275BC60600136266 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -69,7 +67,6 @@
 				23F236162B9C3B4000B0D6AC /* BaseViewController.swift */,
 				23F236122B9C3A5D00B0D6AC /* TweenViewController.swift */,
 				23F236102B9C3A5500B0D6AC /* SpringViewController.swift */,
-				23F236142B9C3B1C00B0D6AC /* MechanicsViewController.swift */,
 				831435F6275BC60600136266 /* Main.storyboard */,
 				831435F9275BC60900136266 /* Assets.xcassets */,
 				831435FB275BC60900136266 /* LaunchScreen.storyboard */,
@@ -159,7 +156,6 @@
 				831435F1275BC60600136266 /* AppDelegate.swift in Sources */,
 				23F236132B9C3A5D00B0D6AC /* TweenViewController.swift in Sources */,
 				23F236112B9C3A5500B0D6AC /* SpringViewController.swift in Sources */,
-				23F236152B9C3B1C00B0D6AC /* MechanicsViewController.swift in Sources */,
 				23F236172B9C3B4000B0D6AC /* BaseViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

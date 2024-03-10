@@ -53,7 +53,7 @@ class BaseViewController: UIViewController {
     }
     
     func setup() {
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .white
     }
     
     func layoutTest(_ parent: UIView) {

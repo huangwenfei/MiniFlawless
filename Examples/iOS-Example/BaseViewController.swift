@@ -12,7 +12,7 @@ class BaseViewController: UIViewController {
     
     var testView: UIView = .init(frame: .init(x: 0, y: 10, width: 50, height: 50))
     
-    var mini: MiniFlawless<CGFloat>!
+    var mini: MiniFlawlessAnimator<CGFloat>!
     
     var isAutoReverse: Bool {
         get {
@@ -53,7 +53,7 @@ class BaseViewController: UIViewController {
     }
     
     func setup() {
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .lightGray
     }
     
     func layoutTest(_ parent: UIView) {
@@ -81,5 +81,54 @@ class BaseViewController: UIViewController {
     func stop() {
         mini.stopAnimation()
     }
+    
+}
+
+extension BaseViewController {
+    
+    func extractFloat(from string: String) -> Double? {
+        extractFloats(from: string).first
+    }
+    
+    func extractFloats(from string: String) -> [Double] {
+        let pattern = "(\\d+(\\.\\d+)?)" // 正则表达式模式，匹配浮点数
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+          
+        let matches = regex.matches(in: string, range: NSRange(location: 0, length: string.utf16.count))
+          
+        var floats: [Double] = []
+        for match in matches {
+            let range = match.range
+            let substring = (string as NSString).substring(with: range)
+            if let floatValue = Double(substring) {
+                floats.append(floatValue)
+            }
+        }
+          
+        return floats
+    }
+    
+    func extractInt(from string: String) -> Int? {
+        extractInts(from: string).first
+    }
+    
+    func extractInts(from string: String) -> [Int] {
+        let pattern = "(\\d+)" // 正则表达式模式，匹配浮点数
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+          
+        let matches = regex.matches(in: string, range: NSRange(location: 0, length: string.utf16.count))
+          
+        var ints: [Int] = []
+        for match in matches {
+            let range = match.range
+            let substring = (string as NSString).substring(with: range)
+            if let intValue = Int(substring) {
+                ints.append(intValue)
+            }
+        }
+        
+        return ints
+    }
+    
     
 }

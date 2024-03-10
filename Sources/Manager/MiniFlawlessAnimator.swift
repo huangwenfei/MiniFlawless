@@ -9,7 +9,7 @@ import UIKit
 import QuartzCore
 
 /// 管理 DisplayLink 和 一个 Item 的动画过程
-public final class MiniFlawless<Element: MiniFlawlessSteppable> {
+public final class MiniFlawlessAnimator<Element: MiniFlawlessSteppable> {
     
     public private(set) var displayLink: CADisplayLink? = nil
     
@@ -166,7 +166,7 @@ public final class MiniFlawless<Element: MiniFlawlessSteppable> {
     
 }
 
-extension MiniFlawless {
+extension MiniFlawlessAnimator {
     
     public func resetAnimation(delay: TimeInterval = 0, completion: (() -> Void)? = nil) {
         

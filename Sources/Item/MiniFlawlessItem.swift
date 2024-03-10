@@ -424,3 +424,148 @@ public struct MiniFlawlessItem<Element: MiniFlawlessSteppable> {
     }
     
 }
+
+// MARK: Spring Only
+public typealias SpringDefaults = MiniFlawlessSpringStepperConfiguration.Defaults
+
+extension MiniFlawlessItem {
+    
+    public var springDamping: CGFloat {
+        get {
+            switch stepperMode {
+            case .spring(let configs):
+                return configs.damping
+                
+            default:
+                return SpringDefaults.damping
+            }
+        }
+        set {
+            switch stepperMode {
+            case .spring(let configs):
+                var new = configs
+                new.damping = newValue
+                updateStepper(by: .spring(new))
+                
+            default:
+                break
+            }
+        }
+    }
+    
+    public var springMass: CGFloat {
+        get {
+            switch stepperMode {
+            case .spring(let configs):
+                return configs.mass
+                
+            default:
+                return SpringDefaults.mass
+            }
+        }
+        set {
+            switch stepperMode {
+            case .spring(let configs):
+                var new = configs
+                new.mass = newValue
+                updateStepper(by: .spring(new))
+                
+            default:
+                break
+            }
+        }
+    }
+    
+    public var springStiffness: CGFloat {
+        get {
+            switch stepperMode {
+            case .spring(let configs):
+                return configs.stiffness
+                
+            default:
+                return SpringDefaults.stiffness
+            }
+        }
+        set {
+            switch stepperMode {
+            case .spring(let configs):
+                var new = configs
+                new.stiffness = newValue
+                updateStepper(by: .spring(new))
+                
+            default:
+                break
+            }
+        }
+    }
+    
+    public var springInitialVelocity: CGFloat {
+        get {
+            switch stepperMode {
+            case .spring(let configs):
+                return configs.initialVelocity
+                
+            default:
+                return SpringDefaults.initialVelocity
+            }
+        }
+        set {
+            switch stepperMode {
+            case .spring(let configs):
+                var new = configs
+                new.initialVelocity = newValue
+                updateStepper(by: .spring(new))
+                
+            default:
+                break
+            }
+        }
+    }
+    
+    public var springEpsilon: CGFloat {
+        get {
+            switch stepperMode {
+            case .spring(let configs):
+                return configs.epsilon
+                
+            default:
+                return SpringDefaults.epsilon
+            }
+        }
+        set {
+            switch stepperMode {
+            case .spring(let configs):
+                var new = configs
+                new.epsilon = newValue
+                updateStepper(by: .spring(new))
+                
+            default:
+                break
+            }
+        }
+    }
+    
+    public var isSpringAllowsOverDamping: Bool {
+        get {
+            switch stepperMode {
+            case .spring(let configs):
+                return configs.allowsOverdamping
+                
+            default:
+                return SpringDefaults.allowsOverdamping
+            }
+        }
+        set {
+            switch stepperMode {
+            case .spring(let configs):
+                var new = configs
+                new.allowsOverdamping = newValue
+                updateStepper(by: .spring(new))
+                
+            default:
+                break
+            }
+        }
+    }
+    
+}

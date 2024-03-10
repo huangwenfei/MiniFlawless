@@ -8,14 +8,17 @@
 import UIKit
 import MiniFlawless
 
-class TweenViewController: BaseViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class TweenViewController: BaseViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
     
     @IBOutlet weak var container: UIView!
     
-    @IBOutlet weak var duartionInput: UITextField!
+    @IBOutlet weak var durationInput: UITextField!
     
     @IBOutlet weak var repeatCountInput: UITextField!
     
+    @IBOutlet weak var autoReverseSwitch: UISwitch!
+    
+    @IBOutlet weak var infiniteSwitch: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,19 +26,30 @@ class TweenViewController: BaseViewController, UIPickerViewDelegate, UIPickerVie
         layoutTest(container)
         
         test()
+        
+    }
+    
+    func getDuration() -> Double {
+        guard let value = durationInput.text else { return 1.5 }
+        return extractFloat(from: value) ?? 1.5
+    }
+    
+    func getRepeatCount() -> Int {
+        guard let value = repeatCountInput.text else { return 3 }
+        return extractInt(from: value) ?? 3
     }
     
     func test() {
         
         let item = MiniFlawlessItem<CGFloat>.init(
             name: "Test",
-            duration: 1.5,
+            duration: getDuration(),
             from: testView.frame.minY,
             to: testView.frame.minY + 240,
             stepper: .tween(.init(function: .linear)),
-            isAutoReverse: isAutoReverse,
-            isForeverRun: isInfinite,
-            repeatCount: 3,
+            isAutoReverse: autoReverseSwitch.isOn,
+            isForeverRun: infiniteSwitch.isOn,
+            repeatCount: getRepeatCount(),
             eachCompletion: { item in
                 print("Each Done")
             },
@@ -52,7 +66,7 @@ class TweenViewController: BaseViewController, UIPickerViewDelegate, UIPickerVie
             print("Done")
         }
         
-        let mini = MiniFlawless.init(displayItem: item)
+        let mini = MiniFlawlessAnimator.init(displayItem: item)
         self.mini = mini
 
     }
@@ -86,7 +100,7 @@ class TweenViewController: BaseViewController, UIPickerViewDelegate, UIPickerVie
             doneFillMode: .none
         )
         
-        let mini = MiniFlawless.init(displayItem: item, framesPerSecond: 16)
+        let mini = MiniFlawlessAnimator.init(displayItem: item, framesPerSecond: 16)
         self.mini = mini
         
         DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
@@ -159,6 +173,27 @@ extension TweenViewController {
         }
         
         print("Function: ", function)
+        
+    }
+    
+}
+
+// MARK: UITextFieldDelegate
+extension TweenViewController {
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        guard let string = textField.text else { return }
+        
+        if textField == durationInput, let value = extractFloat(from: string) {
+            mini.displayItem.duration = value
+            print("Tween Duration Change: ", value)
+        }
+        
+        if textField == repeatCountInput, let value = extractInt(from: string) {
+            mini.displayItem.repeatCount = value
+            print("Tween RepeatCount Change: ", value)
+        }
         
     }
     

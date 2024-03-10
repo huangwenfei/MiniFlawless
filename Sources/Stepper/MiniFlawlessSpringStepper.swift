@@ -115,8 +115,18 @@ open class MiniFlawlessSpringStepper<Element: MiniFlawlessSteppable>: MiniFlawle
 
 public struct MiniFlawlessSpringStepperConfiguration {
     
+    /// Defaults
+    public struct Defaults {
+        public static let damping: CGFloat = 10
+        public static let mass: CGFloat = 1
+        public static let stiffness: CGFloat = 100
+        public static let initialVelocity: CGFloat = 0
+        public static let epsilon: CGFloat = 0.01
+        public static let allowsOverdamping: Bool = false
+    }
+    
     /// Defines how the spring’s motion should be damped due to the forces of friction.
-    public var damping: CGFloat = 10 {
+    public var damping: CGFloat = Defaults.damping {
         didSet {
             update(self)
             durationUpdate(epsilon)
@@ -124,7 +134,7 @@ public struct MiniFlawlessSpringStepperConfiguration {
     }
     
     /// The mass of the object attached to the end of the spring.
-    public var mass: CGFloat = 1 {
+    public var mass: CGFloat = Defaults.mass {
         didSet {
             update(self)
             durationUpdate(epsilon)
@@ -132,7 +142,7 @@ public struct MiniFlawlessSpringStepperConfiguration {
     }
     
     /// The spring stiffness coefficient.
-    public var stiffness: CGFloat = 100 {
+    public var stiffness: CGFloat = Defaults.stiffness {
         didSet {
             update(self)
 //                durationUpdate(epsilon)
@@ -140,15 +150,15 @@ public struct MiniFlawlessSpringStepperConfiguration {
     }
     
     /// The initial velocity of the object attached to the spring.
-    public var initialVelocity: CGFloat = 0 {
+    public var initialVelocity: CGFloat = Defaults.initialVelocity {
         didSet { update(self) }
     }
     
-    public var epsilon: CGFloat = 0.01 {
+    public var epsilon: CGFloat = Defaults.epsilon {
        didSet { durationUpdate(epsilon) }
     }
 
-    public var allowsOverdamping: Bool = false {
+    public var allowsOverdamping: Bool = Defaults.allowsOverdamping {
         didSet { update(self) }
     }
     

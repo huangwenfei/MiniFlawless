@@ -8,11 +8,11 @@
 import UIKit
 import MiniFlawless
 
-class SpringViewController: BaseViewController {
+class SpringViewController: BaseViewController, UITextFieldDelegate {
     
     @IBOutlet weak var container: UIView!
     
-    @IBOutlet weak var duartionInput: UITextField!
+    @IBOutlet weak var durationInput: UITextField!
     
     @IBOutlet weak var repeatCountInput: UITextField!
     
@@ -26,35 +26,97 @@ class SpringViewController: BaseViewController {
     
     @IBOutlet weak var epsilonInput: UITextField!
     
+    @IBOutlet weak var overDampingSwitch: UISwitch!
     
-    var isOverDamping: Bool {
+    @IBOutlet weak var autoReverseSwitch: UISwitch!
+    
+    @IBOutlet weak var infiniteSwitch: UISwitch!
+    
+    
+    var damping: CGFloat {
         get {
-            guard mini != nil else { return false }
-            
-            switch mini.displayItem.stepperMode {
-            case .spring(let configs):
-                return configs.allowsOverdamping
-                
-            default:
-                return false
-            }
+            guard mini != nil else { return MiniFlawless.SpringDefaults.damping }
+            return mini.displayItem.springDamping
         }
         set {
             guard mini != nil else { return }
-            
-            switch mini.displayItem.stepperMode {
-            case .spring(let configs):
-                var new = configs
-                new.allowsOverdamping = newValue
-                update {
-                    mini.displayItem.updateStepper(by: .spring(new))
-                }
-                
-            default:
-                break
+            update {
+                mini.displayItem.springDamping = newValue
             }
+            
         }
     }
+    
+    var mass: CGFloat {
+        get {
+            guard mini != nil else { return MiniFlawless.SpringDefaults.mass }
+            return mini.displayItem.springMass
+        }
+        set {
+            guard mini != nil else { return }
+            update {
+                mini.displayItem.springMass = newValue
+            }
+            
+        }
+    }
+    
+    var stiffness: CGFloat {
+        get {
+            guard mini != nil else { return MiniFlawless.SpringDefaults.stiffness }
+            return mini.displayItem.springStiffness
+        }
+        set {
+            guard mini != nil else { return }
+            update {
+                mini.displayItem.springStiffness = newValue
+            }
+            
+        }
+    }
+    
+    var initialVelocity: CGFloat {
+        get {
+            guard mini != nil else { return MiniFlawless.SpringDefaults.initialVelocity }
+            return mini.displayItem.springInitialVelocity
+        }
+        set {
+            guard mini != nil else { return }
+            update {
+                mini.displayItem.springInitialVelocity = newValue
+            }
+            
+        }
+    }
+    
+    var epsilon: CGFloat {
+        get {
+            guard mini != nil else { return MiniFlawless.SpringDefaults.epsilon }
+            return mini.displayItem.springEpsilon
+        }
+        set {
+            guard mini != nil else { return }
+            update {
+                mini.displayItem.springEpsilon = newValue
+            }
+            
+        }
+    }
+    
+    var isOverDamping: Bool {
+        get {
+            guard mini != nil else { return MiniFlawless.SpringDefaults.allowsOverdamping }
+            return mini.displayItem.isSpringAllowsOverDamping
+        }
+        set {
+            guard mini != nil else { return }
+            update {
+                mini.displayItem.isSpringAllowsOverDamping = newValue
+            }
+            
+        }
+    }
+    
     
     
     override func viewDidLoad() {
@@ -65,25 +127,62 @@ class SpringViewController: BaseViewController {
         test()
     }
     
+    func getDuration() -> Double {
+        guard let value = durationInput.text else { return 1 }
+        return extractFloat(from: value) ?? 1
+    }
+    
+    func getRepeatCount() -> Int {
+        guard let value = repeatCountInput.text else { return 3 }
+        return extractInt(from: value) ?? 3
+    }
+    
+    func getDamping() -> Double {
+        guard let value = dampingInput.text else { return 1 }
+        return extractFloat(from: value) ?? 1
+    }
+    
+    func getMass() -> Double {
+        guard let value = massInput.text else { return 1 }
+        return extractFloat(from: value) ?? 1
+    }
+    
+    func getStiffness() -> Double {
+        guard let value = stiffnessInput.text else { return 100 }
+        return extractFloat(from: value) ?? 100
+    }
+    
+    func getInitialVelocity() -> Double {
+        guard let value = initialVelocityInput.text else { return 0 }
+        return extractFloat(from: value) ?? 0
+    }
+    
+    func getEpsilon() -> Double {
+        guard let value = epsilonInput.text else { return 0.01 }
+        return extractFloat(from: value) ?? 0.01
+    }
+
+    
     func test() {
         
         let item = MiniFlawlessItem<CGFloat>.init(
             name: "Test",
-            duration: 1,
+            duration: getDuration(),
             from: testView.frame.minY,
             to: testView.frame.minY + 130,
             stepper: .spring(
                 .init(
-                    damping: 1, /// 10,
-                    mass: 1,
-                    stiffness: 100,
-                    initialVelocity: 0,
-                    epsilon: 0.01,
-                    allowsOverdamping: isOverDamping
+                    damping: getDamping(), /// 10,
+                    mass: getMass(),
+                    stiffness: getStiffness(),
+                    initialVelocity: getInitialVelocity(),
+                    epsilon: getEpsilon(),
+                    allowsOverdamping: overDampingSwitch.isOn
                 )
             ),
-            isAutoReverse: isAutoReverse,
-            isForeverRun: isInfinite,
+            isAutoReverse: autoReverseSwitch.isOn,
+            isForeverRun: infiniteSwitch.isOn,
+            repeatCount: getRepeatCount(),
             eachCompletion: { item in
                 print("Each Done")
             },
@@ -99,7 +198,7 @@ class SpringViewController: BaseViewController {
             print("Done")
         }
         
-        let mini = MiniFlawless.init(displayItem: item)
+        let mini = MiniFlawlessAnimator.init(displayItem: item)
         self.mini = mini
 
     }
@@ -129,6 +228,52 @@ class SpringViewController: BaseViewController {
     
     @IBAction func stopAction(_ sender: Any) {
         stop()
+    }
+    
+}
+
+// MARK: UITextFieldDelegate
+extension SpringViewController {
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        guard let string = textField.text else { return }
+        
+        if textField == durationInput, let value = extractFloat(from: string) {
+            mini.displayItem.duration = value
+            print("Spring Duration Change: ", value)
+        }
+        
+        if textField == repeatCountInput, let value = extractInt(from: string) {
+            mini.displayItem.repeatCount = value
+            print("Spring RepeatCount Change: ", value)
+        }
+        
+        if textField == dampingInput, let value = extractFloat(from: string) {
+            mini.displayItem.springDamping = value
+            print("Spring Damping Change: ", value)
+        }
+        
+        if textField == massInput, let value = extractFloat(from: string) {
+            mini.displayItem.springMass = value
+            print("Spring Mass Change: ", value)
+        }
+        
+        if textField == stiffnessInput, let value = extractFloat(from: string) {
+            mini.displayItem.springStiffness = value
+            print("Spring Stiffness Change: ", value)
+        }
+        
+        if textField == initialVelocityInput, let value = extractFloat(from: string) {
+            mini.displayItem.springInitialVelocity = value
+            print("Spring Initial Velocity Change: ", value)
+        }
+        
+        if textField == epsilonInput, let value = extractFloat(from: string) {
+            mini.displayItem.springEpsilon = value
+            print("Spring Epsilon Change: ", value)
+        }
+        
     }
     
 }

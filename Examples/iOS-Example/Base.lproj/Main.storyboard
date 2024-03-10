@@ -112,6 +112,9 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="Euj-1g-iGn" id="BvO-PI-QU2"/>
+                                        </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Duration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFM-3f-50j">
                                         <rect key="frame" x="49.333333333333329" y="3" width="66" height="21"/>
@@ -144,6 +147,9 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="Euj-1g-iGn" id="RP6-dY-Eo5"/>
+                                        </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RepeatCount" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rjK-Z6-R3u">
                                         <rect key="frame" x="48" y="3" width="100" height="21"/>
@@ -357,8 +363,10 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="393" height="838"/>
                     <connections>
+                        <outlet property="autoReverseSwitch" destination="sjS-m5-9O4" id="eTV-ht-jcb"/>
                         <outlet property="container" destination="Ae8-i8-qDf" id="zOW-Xc-WlF"/>
-                        <outlet property="duartionInput" destination="oAy-R5-kEM" id="a9c-vh-4A9"/>
+                        <outlet property="durationInput" destination="oAy-R5-kEM" id="a9c-vh-4A9"/>
+                        <outlet property="infiniteSwitch" destination="Ihe-ty-4Zb" id="w0W-Sy-R3a"/>
                         <outlet property="repeatCountInput" destination="EWN-VG-gmK" id="pJB-CU-b5c"/>
                     </connections>
                 </viewController>
@@ -384,6 +392,9 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="PpQ-Nv-hio" id="NGI-wJ-gu1"/>
+                                        </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Duration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Cw-Vn-hfd">
                                         <rect key="frame" x="49.333333333333329" y="3" width="66" height="21"/>
@@ -416,6 +427,9 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="PpQ-Nv-hio" id="GRW-cH-NsY"/>
+                                        </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RepeatCount" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9cu-mg-ZYx">
                                         <rect key="frame" x="48" y="3" width="100" height="21"/>
@@ -598,6 +612,9 @@
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="PpQ-Nv-hio" id="FNb-OB-4mW"/>
+                                                </connections>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Damping" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Im4-5G-pPI">
                                                 <rect key="frame" x="0.0" y="3" width="121" height="21"/>
@@ -630,6 +647,9 @@
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="PpQ-Nv-hio" id="dW2-BP-Zpq"/>
+                                                </connections>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mass" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SaH-Gv-3D1">
                                                 <rect key="frame" x="0.0" y="4" width="103" height="21"/>
@@ -670,6 +690,9 @@
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="PpQ-Nv-hio" id="7Hh-Dy-Wjw"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -692,6 +715,9 @@
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="PpQ-Nv-hio" id="9c0-mP-CRJ"/>
+                                                </connections>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initial Velocity" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fOi-mU-ALf">
                                                 <rect key="frame" x="0.0" y="3" width="118" height="21"/>
@@ -723,6 +749,9 @@
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="PpQ-Nv-hio" id="mSg-xv-2ER"/>
+                                                </connections>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Epsilon" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vkG-Ye-e4g">
                                                 <rect key="frame" x="0.0" y="3" width="109" height="21"/>
@@ -839,12 +868,15 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="393" height="852"/>
                     <connections>
+                        <outlet property="autoReverseSwitch" destination="aa2-48-qfG" id="wiS-7d-h1n"/>
                         <outlet property="container" destination="vhi-Qk-uiS" id="6Vi-uI-Lbg"/>
                         <outlet property="dampingInput" destination="BiE-21-Oo9" id="Pi3-AM-8fC"/>
-                        <outlet property="duartionInput" destination="3mH-v7-CJy" id="epv-3V-owC"/>
+                        <outlet property="durationInput" destination="3mH-v7-CJy" id="epv-3V-owC"/>
                         <outlet property="epsilonInput" destination="qLv-96-7dQ" id="Jc0-zm-Lew"/>
+                        <outlet property="infiniteSwitch" destination="lrl-Xr-X8C" id="bWV-Xd-QzU"/>
                         <outlet property="initialVelocityInput" destination="rEC-I7-pp9" id="1KK-Wa-TML"/>
                         <outlet property="massInput" destination="7x9-Cn-UKd" id="em1-7o-uIC"/>
+                        <outlet property="overDampingSwitch" destination="ole-z2-YaR" id="kXz-aj-aIH"/>
                         <outlet property="repeatCountInput" destination="gSj-7j-V6L" id="kdV-o0-C26"/>
                         <outlet property="stiffnessInput" destination="cXK-yv-TWk" id="SU2-rq-WcV"/>
                     </connections>

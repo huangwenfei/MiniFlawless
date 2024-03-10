@@ -1,5 +1,5 @@
 //
-//  MiniFlawlessGroup.swift
+//  MiniFlawlessAnimatorGroup.swift
 //  MiniFlawless
 //
 //  Created by 黄文飞 on 2021/12/3.
@@ -9,7 +9,7 @@ import Foundation
 import CoreGraphics
 import QuartzCore.CADisplayLink
 
-public final class MiniFlawlessGroup<Element: MiniFlawlessSteppable> {
+public final class MiniFlawlessAnimatorGroup<Element: MiniFlawlessSteppable> {
     
     public var displayLink: CADisplayLink? = nil
     
@@ -96,7 +96,7 @@ public final class MiniFlawlessGroup<Element: MiniFlawlessSteppable> {
     
 }
 
-extension MiniFlawlessGroup {
+extension MiniFlawlessAnimatorGroup {
     
     public func startAnimation() {
 //        guard let link = displayLink else { return }

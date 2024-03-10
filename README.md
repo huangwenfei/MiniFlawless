@@ -76,3 +76,82 @@ let item = MiniFlawlessItem<CGFloat>.init(
 let mini = MiniFlawlessAnimator(displayItem: item)
 mini.startAnimation()
 ```
+
+---
+
+- MiniFlawless is an animation library.
+- MiniFlawless is currently iOS only.
+
+## Content
+
+- Requirements
+- Installation
+- Examples
+
+## Requirements
+
+- iOS 12+
+- Xcode 15+
+- Swift 5+
+
+
+## Installation
+
+- Swift Package
+```swift
+dependencies: [
+    .package(url: "https://github.com/huangwenfei/MiniFlawless.git", .upToNextMajor(from: "0.0.3.3"))
+]
+```
+
+- Cocoapods
+```ruby
+pod 'MiniFlawless'
+```
+
+
+## Examples
+
+See the iOS-Example project for details.
+
+- Tween
+```swift
+import MiniFlawless
+
+let testView = ...
+
+let item = MiniFlawlessItem<CGFloat>.init(
+    name: "Test",
+    duration: 0.3,
+    from: testView.frame.minY,
+    to: testView.frame.minY + 240,
+    stepper: .tween(.linear),
+    completion: { item in
+        print("Done")
+    })
+
+let mini = MiniFlawlessAnimator(displayItem: item)
+mini.startAnimation()
+
+```
+
+
+- Spring
+```swift
+import MiniFlawless
+
+let testView = ...
+
+let item = MiniFlawlessItem<CGFloat>.init(
+    name: "Test",
+    duration: 0.3,
+    from: testView.frame.minY,
+    to: testView.frame.minY + 130,
+    stepper: .spring(.init()),
+    completion: { item in
+        print("Done")
+    })
+    
+let mini = MiniFlawlessAnimator(displayItem: item)
+mini.startAnimation()
+```

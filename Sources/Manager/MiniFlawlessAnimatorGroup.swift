@@ -9,6 +9,7 @@ import Foundation
 import CoreGraphics
 import QuartzCore.CADisplayLink
 
+/// 管理 DisplayLink 和 多个 Item 的动画过程
 public final class MiniFlawlessAnimatorGroup<Element: MiniFlawlessSteppable> {
     
     public var displayLink: CADisplayLink? = nil
